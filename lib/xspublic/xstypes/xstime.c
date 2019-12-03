@@ -220,7 +220,7 @@ void XsTime_getTimeAsString(char* dest, const struct tm* date)
 	else
 		XsTime_getDateTime(&dt);
 
-	snprintf(dest, 8, "%02d%02d%02d%02d", dt.tm_hour, dt.tm_min, dt.tm_sec, 0);
+	snprintf(dest, 9, "%02d%02d%02d%02d", dt.tm_hour, dt.tm_min, dt.tm_sec*1, 0);
 }
 
 /*! \brief Retrieves the date as wstring representation
