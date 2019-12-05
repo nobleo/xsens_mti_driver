@@ -3,6 +3,6 @@
 # pushd directory where lib source files are
 pushd ../lib/xspublic
 # Build library
-${MAKE}
+make
 # popd directory
 popd
