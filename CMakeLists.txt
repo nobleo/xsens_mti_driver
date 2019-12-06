@@ -84,5 +84,5 @@ install(
 )
 
 add_custom_command(TARGET xsens_mti_node
-    PRE_BUILD COMMAND +make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/xspublic -f Makefile
+    PRE_BUILD COMMAND +make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/xspublic
 )
