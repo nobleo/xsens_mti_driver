@@ -18,7 +18,7 @@ Changes done with respect to the orginal source:
 
 # Building:
   CMakelists.txt has been adapted from official xsens package.
-  It now automatically builds the library via a PRE_BUILD call which calls scripts/build_lib.sh
+  It now automatically builds the library via a PRE_BUILD call
 
   Therefore a simple catkin build --this should suffice
 
