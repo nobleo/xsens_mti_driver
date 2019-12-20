@@ -4,8 +4,7 @@
 This package is almost completely taken from the ROS example in the MT SDK.
 Changes done with respect to the orginal source:
  - Adapted CMakelists.txt to also install TARGETS
- - Added scripts/build_lib.sh to build the libraries needed for the executable
- - Adapted CMakelists.txt to run a PRE-BUILD command that calls mentioned scripts
+ - Adapted CMakelists.txt to run a PRE-BUILD command that builds libraries needed for the executable
  - Removed all trailing whitespaces
 
 # Documentation:
