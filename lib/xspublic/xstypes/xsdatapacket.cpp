@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -124,6 +156,8 @@ Variant* createVariant(XsDataIdentifier id)
 		return new XsRawGnssPvtDataVariant(id);
 	case XDI_GnssSatInfo			:// 0x7020,
 		return new XsRawGnssSatInfoVariant(id);
+	case XDI_GnssPvtPulse			:// 0x7030
+		return new SimpleVariant<uint32_t>(id);
 
 	//case XDI_AngularVelocityGroup	:// 0x8000,
 	case XDI_RateOfTurn				:// 0x8020,
@@ -396,7 +430,8 @@ void XsDataPacket_construct(XsDataPacket* thisPtr)
 	thisPtr->m_etos = 0;
 }
 
-/*! \brief Inits a data packet as a (referenced) copy of \a src
+/*! \brief Initializes a data packet as a (referenced) copy of \a src
+	\param src The data packet to reference-copy from
 */
 void XsDataPacket_copyConstruct(XsDataPacket* thisPtr, XsDataPacket const* src)
 {
@@ -456,11 +491,12 @@ void XsDataPacket_copy(XsDataPacket* copy, XsDataPacket const* src)
 */
 void XsDataPacket_swap(XsDataPacket* thisPtr, XsDataPacket* other)
 {
-	std::swap(thisPtr->d, other->d);
-	std::swap(thisPtr->m_deviceId, other->m_deviceId);
-	std::swap(thisPtr->m_toa, other->m_toa);
-	std::swap(thisPtr->m_packetId, other->m_packetId);
-	std::swap(thisPtr->m_etos, other->m_etos);
+	using std::swap;
+	swap(thisPtr->d, other->d);
+	swap(thisPtr->m_deviceId, other->m_deviceId);
+	swap(thisPtr->m_toa, other->m_toa);
+	swap(thisPtr->m_packetId, other->m_packetId);
+	swap(thisPtr->m_etos, other->m_etos);
 }
 
 /*! \brief Returns whether the datapacket is empty
@@ -1864,7 +1900,7 @@ void XsDataPacket_setSampleTimeFine(XsDataPacket* thisPtr, uint32_t counter)
 	}
 }
 
-/*! \brief Return the coarse sample time of a packet
+/*! \return Return the coarse sample time of a packet
 */
 uint32_t XsDataPacket_sampleTimeCoarse(const XsDataPacket* thisPtr)
 {
@@ -1894,6 +1930,7 @@ void XsDataPacket_setSampleTimeCoarse(XsDataPacket* thisPtr, uint32_t counter)
 }
 
 /*! \brief Return the full 64-bit sample time of a packet, combined from the fine and coarse sample times or received directly from the device. The 64-bit sample time runs at 10kHz.
+	\returns the full 64-bit sample time of a packet
 */
 uint64_t XsDataPacket_sampleTime64(const XsDataPacket* thisPtr)
 {
@@ -2063,6 +2100,7 @@ XsRawGnssPvtData* XsDataPacket_rawGnssPvtData(const XsDataPacket* thisPtr, XsRaw
 }
 
 /*! \brief Returns 1 if data item contains RawGnssPvtData, 0 otherwise
+	\returns true if this XsDataPacket contains Raw GNSS data
 */
 int XsDataPacket_containsRawGnssPvtData(const XsDataPacket* thisPtr)
 {
@@ -2077,8 +2115,33 @@ void XsDataPacket_setRawGnssPvtData(XsDataPacket* thisPtr, const XsRawGnssPvtDat
 	genericSet<XsRawGnssPvtData, XsRawGnssPvtDataVariant>(thisPtr, r, XDI_GnssPvtData);
 }
 
+/*! \brief Returns the timestamp of a PVT Pulse
+
+	\returns Returns the timestamp of a PVT Pulse
+*/
+uint32_t XsDataPacket_gnssPvtPulse(const XsDataPacket* thisPtr)
+{
+	return GenericSimple<uint32_t>::get(thisPtr, XDI_GnssPvtPulse);
+}
+
+/*! \brief Check if data item XsDataPacket_contains a pvt pulse
+	\returns true if this packet XsDataPacket_contains a spvt pulse
+*/
+int XsDataPacket_containsGnssPvtPulse(const XsDataPacket* thisPtr)
+{
+	return genericContains(thisPtr, XDI_GnssPvtPulse);
+}
+
+/*! \brief Add/update pvt pulse timestamp data for the item
+	\param counter The new data to set
+*/
+void XsDataPacket_setGnssPvtPulse(XsDataPacket* thisPtr, uint32_t counter)
+{
+	GenericSimple<uint32_t>::set(thisPtr, counter, XDI_GnssPvtPulse);
+}
 
 /*! \brief Returns the age of the GNSS data (in samples)
+	\returns the age of the GNSS data
 */
 uint8_t XsDataPacket_gnssAge(const XsDataPacket* thisPtr)
 {
@@ -2086,6 +2149,7 @@ uint8_t XsDataPacket_gnssAge(const XsDataPacket* thisPtr)
 }
 
 /*! \brief Returns 1 if data item contains GnssAge, 0 otherwise
+	\returns true if this XsDataPacket containts GNSS age data
 */
 int XsDataPacket_containsGnssAge(const XsDataPacket* thisPtr)
 {
@@ -2110,6 +2174,7 @@ XsRawGnssSatInfo* XsDataPacket_rawGnssSatInfo(const XsDataPacket* thisPtr, XsRaw
 }
 
 /*! \brief Returns 1 if data item contains RawGnssPvtData, 0 otherwise
+	\returns true if this XsDataPacket containts raw GNSS Sat Info
 */
 int XsDataPacket_containsRawGnssSatInfo(const XsDataPacket* thisPtr)
 {
@@ -2258,7 +2323,10 @@ void XsDataPacket_toMessage(const XsDataPacket* thisPtr, XsMessage* msg)
 */
 XsSnapshot* XsDataPacket_fullSnapshot(const XsDataPacket* thisPtr, XsSnapshot* returnVal)
 {
-	return genericGet<XsSnapshot, XsFullSnapshotVariant>(thisPtr, returnVal, XDI_FullSnapshot);
+	genericGet<XsSnapshot, XsFullSnapshotVariant>(thisPtr, returnVal, XDI_FullSnapshot);
+	if (!returnVal->m_deviceId.isValid() && thisPtr->m_deviceId.isValid())
+		returnVal->m_deviceId = thisPtr->m_deviceId;
+	return returnVal;
 }
 
 /*! \brief Returns true if the XsDataPacket contains Full Snapshot data
@@ -2312,6 +2380,8 @@ void XsDataPacket_setAwindaSnapshot(XsDataPacket* thisPtr, XsSnapshot const * da
 */
 int XsDataPacket_isAwindaSnapshotARetransmission(const XsDataPacket* thisPtr)
 {
+	if (!thisPtr->d)
+		return false;
 	auto it = MAP.find(XDI_AwindaSnapshot);
 	if (it == MAP.end())
 		return false;
