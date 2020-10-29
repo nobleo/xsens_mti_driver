@@ -74,6 +74,10 @@ void XdaInterface::spinFor(std::chrono::milliseconds timeout)
 			cb->operator()(rosPacket.second, rosPacket.first);
 		}
 	}
+	else
+	{
+		ROS_ERROR("m_xdaCallback.next() returned an empty packet!");
+	}
 }
 
 void XdaInterface::registerPublishers(ros::NodeHandle &node)

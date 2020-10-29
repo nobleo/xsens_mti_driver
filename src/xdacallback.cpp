@@ -63,6 +63,7 @@ void XdaCallback::onLiveDataAvailable(XsDevice *, const XsDataPacket *packet)
 	// Discard oldest packet if buffer full
 	if (m_buffer.size() == m_maxBufferSize)
 	{
+		ROS_WARN("Buffer full!");
 		m_buffer.pop_front();
 	}
 

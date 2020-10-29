@@ -152,6 +152,11 @@ struct ImuPublisher : public PacketCallback
 
             pub.publish(msg);
         }
+        else
+        {
+            ROS_ERROR("quaternion_available %d accel_available %d gyro_available %d",
+                        quaternion_available, accel_available, gyro_available);
+        }
     }
 };
 

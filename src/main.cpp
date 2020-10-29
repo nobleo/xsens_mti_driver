@@ -52,6 +52,8 @@ int main(int argc, char *argv[])
 	{
 		xdaInterface->spinFor(milliseconds(100));
 
+		ROS_INFO_THROTTLE(1.0, "Still happily running the main-loop");
+
 		ros::spinOnce();
 	}
 
