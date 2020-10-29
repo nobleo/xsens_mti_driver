@@ -65,6 +65,7 @@ XdaInterface::~XdaInterface()
 
 void XdaInterface::spinFor(std::chrono::milliseconds timeout)
 {
+	ROS_INFO_THROTTLE(1.0, "Device still measuring? %d", m_device->isMeasuring());
 	RosXsDataPacket rosPacket = m_xdaCallback.next(timeout);
 
 	if (!rosPacket.second.empty())
