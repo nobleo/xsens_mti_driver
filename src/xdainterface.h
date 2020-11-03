@@ -43,7 +43,7 @@ public:
 	XdaInterface();
 	~XdaInterface();
 
-	void spinFor(std::chrono::milliseconds timeout);
+	bool spinFor(std::chrono::milliseconds timeout);
 	void registerPublishers(ros::NodeHandle &node);
 
 	bool connectDevice();

@@ -48,10 +48,8 @@ int main(int argc, char *argv[])
 	if (!xdaInterface->prepare())
 		return -1;
 
-	while (ros::ok())
+	while (ros::ok() && xdaInterface->spinFor(milliseconds(100)))
 	{
-		xdaInterface->spinFor(milliseconds(100));
-
 		ROS_INFO_THROTTLE(1.0, "Still happily running the main-loop");
 
 		ros::spinOnce();

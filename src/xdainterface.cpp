@@ -63,7 +63,7 @@ XdaInterface::~XdaInterface()
 	m_control->destruct();
 }
 
-void XdaInterface::spinFor(std::chrono::milliseconds timeout)
+bool XdaInterface::spinFor(std::chrono::milliseconds timeout)
 {
 	ROS_INFO_THROTTLE(1.0, "Device still measuring? %d", m_device->isMeasuring());
 	RosXsDataPacket rosPacket = m_xdaCallback.next(timeout);
@@ -74,10 +74,12 @@ void XdaInterface::spinFor(std::chrono::milliseconds timeout)
 		{
 			cb->operator()(rosPacket.second, rosPacket.first);
 		}
+		return true;
 	}
 	else
 	{
-		ROS_ERROR("m_xdaCallback.next() returned an empty packet!");
+		ROS_ERROR("m_xdaCallback.next() returned an empty packet! Shutting down");
+		return false;
 	}
 }
 
