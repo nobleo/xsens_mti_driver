@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -57,11 +89,15 @@ XSTYPES_DLL_API int XsDeviceId_isMtiX00(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtigX00(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtigX10(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMti6X0(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isMti8X0(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isMti2GO(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtw(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtw2(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtx(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtx2(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isBodyPack(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isBodyPackV1(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isBodyPackV2(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isWirelessMaster(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isAwindaX(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isAwindaXStation(struct XsDeviceId const* thisPtr);
@@ -75,11 +111,15 @@ XSTYPES_DLL_API int XsDeviceId_isSyncStationX(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isSyncStation2(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isHilDevice(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isGlove(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isDot(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isRugged(struct XsDeviceId const* thisPtr);
 
 XSTYPES_DLL_API int XsDeviceId_isImu(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isVru(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isAhrs(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isGnss(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isRtk(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_hasInternalGnss(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isContainerDevice(struct XsDeviceId const* thisPtr);
 
 XSTYPES_DLL_API int XsDeviceId_isMt(struct XsDeviceId const* thisPtr);
@@ -146,9 +186,10 @@ XSTYPES_DLL_API int XsDeviceId_isMtMk5_710(struct XsDeviceId const* thisPtr);
 } // extern "C"
 #endif
 
-struct XsDeviceId {
+struct XsDeviceId
+{
 #ifdef __cplusplus
-	/*! \brief Constructor that creates an XsDeviceId from the supplied \a productcode, \a hardwareVersion, \a productVariant and \a serialNumber*/
+	/*! \brief Constructor that creates an XsDeviceId from the supplied \a productcode, \a hardwareVersion, \a productVariant and \a serialNumber */
 	inline XsDeviceId(const char* productCode, uint16_t hardwareVersion, uint32_t productVariant, uint64_t serialNumber)
 		: m_deviceId(serialNumber)
 		, m_hardwareVersion(hardwareVersion)
@@ -247,10 +288,25 @@ struct XsDeviceId {
 	{
 		return 0 != XsDeviceId_isMti6X0(this);
 	}
+	/*! \brief \copybrief XsDeviceId_isMti8X0(const struct XsDeviceId*) */
+	inline bool isMti8X0() const
+	{
+		return 0 != XsDeviceId_isMti8X0(this);
+	}
+	/*! \brief \copybrief XsDeviceId_isMti2GO(const struct XsDeviceId*) */
+	inline bool isMti2GO() const
+	{
+		return 0 != XsDeviceId_isMti2GO(this);
+	}
 	/*! \brief \copybrief XsDeviceId_isGlove(const struct XsDeviceId*) */
 	inline bool isGlove () const
 	{
 		return 0 != XsDeviceId_isGlove(this);
+	}
+	/*! \brief \copybrief XsDeviceId_isRugged(const struct XsDeviceId*) */
+	inline bool isRugged() const
+	{
+		return 0 != XsDeviceId_isRugged(this);
 	}
 	/*! \brief \copybrief XsDeviceId_isMtw(const struct XsDeviceId*) */
 	inline bool isMtw() const
@@ -276,6 +332,16 @@ struct XsDeviceId {
 	inline bool isBodyPack() const
 	{
 		return 0 != XsDeviceId_isBodyPack(this);
+	}
+	/*! \brief \copybrief XsDeviceId_isBodyPackV1(const struct XsDeviceId*) */
+	inline bool isBodyPackV1() const
+	{
+		return 0 != XsDeviceId_isBodyPackV1(this);
+	}
+	/*! \brief \copybrief XsDeviceId_isBodyPackV2(const struct XsDeviceId*) */
+	inline bool isBodyPackV2() const
+	{
+		return 0 != XsDeviceId_isBodyPackV2(this);
 	}
 	/*! \brief \copybrief XsDeviceId_isWirelessMaster(const struct XsDeviceId*) */
 	inline bool isWirelessMaster() const
@@ -357,6 +423,16 @@ struct XsDeviceId {
 	{
 		return 0 != XsDeviceId_isGnss(this);
 	}
+	/*! \brief \copybrief XsDeviceId_isRtk(const struct XsDeviceId*) */
+	inline bool isRtk() const
+	{
+		return 0 != XsDeviceId_isRtk(this);
+	}
+	/*! \brief \copybrief XsDeviceId_hasInternalGnss(const struct XsDeviceId*) */
+	inline bool hasInternalGnss() const
+	{
+		return 0 != XsDeviceId_hasInternalGnss(this);
+	}
 	/*! \brief \copybrief XsDeviceId_isContainerDevice(const struct XsDeviceId*) */
 	inline bool isContainerDevice() const
 	{
@@ -395,7 +471,7 @@ struct XsDeviceId {
 		return tmp;
 	}
 	/*! \copydoc XsDeviceId_fromString(XsDeviceId* thisPtr, const XsString* str) */
-	inline void fromString(const XsString &str)
+	inline void fromString(const XsString& str)
 	{
 		XsDeviceId_fromString(this, &str);
 	}
@@ -413,7 +489,7 @@ struct XsDeviceId {
 
 	/*! \copydoc XsDeviceId_fromDeviceTypeString(XsDeviceId* thisPtr, const XsString* str)
 	*/
-	inline void fromDeviceTypeString(const XsString &str)
+	inline void fromDeviceTypeString(const XsString& str)
 	{
 		XsDeviceId_fromDeviceTypeString(this, &str);
 	}
@@ -448,8 +524,8 @@ struct XsDeviceId {
 		return xtype;
 	}
 	/*! \brief Returns the (detailed) device type of this id
-	\param detailed Boolean whether detailed information is returned
-	\return The requested device type
+		\param detailed Boolean whether detailed information is returned
+		\return The requested device type
 	*/
 	inline XsDeviceId deviceType(bool detailed = true) const
 	{
@@ -458,8 +534,8 @@ struct XsDeviceId {
 		return xtype;
 	}
 	/*! \brief Returns the detailed device type mask of this id
-	\param detailed Boolean whether detailed information is returned
-	\return The requested device type mask
+		\param detailed Boolean whether detailed information is returned
+		\return The requested device type mask
 	*/
 	inline XsDeviceId deviceTypeMask(bool detailed = true) const
 	{
@@ -479,7 +555,7 @@ struct XsDeviceId {
 					m_productVariant == other.m_productVariant &&
 					m_hardwareVersion == other.m_hardwareVersion &&
 					(strcmp(m_productCode, other.m_productCode) == 0)
-					);
+				   );
 		}
 	}
 	/*! \brief Returns true if the \a other deviceId does not match this deviceId */
@@ -795,11 +871,11 @@ typedef struct XsDeviceId XsDeviceId;
 #if defined(__cplusplus) && !defined(XSENS_NO_STL)
 namespace std
 {
-	template<typename _CharT, typename _Traits>
-	basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& o, XsDeviceId const& xd)
-	{
-		return (o << xd.toString());
-	}
+template<typename _CharT, typename _Traits>
+basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& o, XsDeviceId const& xd)
+{
+	return (o << xd.toString());
+}
 }
 
 inline XsString& operator<<(XsString& o, XsDeviceId const& xd)

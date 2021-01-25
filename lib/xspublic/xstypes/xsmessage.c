@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -208,39 +240,52 @@ static inline void XsMessage_updateChecksumWithValue(XsMessage *thisPtr, const v
 /*! \brief Swap the endianness based on the data size */
 static inline void swapEndian(void *data, const XsSize size)
 {
-	uint16_t *i16;
-	uint32_t *i32;
-	uint64_t *i64;
-
-	switch (size)
-	{
-	case sizeof(char):
-		break;
-	case sizeof(*i16):
-		i16 = data;
-		*i16 = swapEndian16(*i16);
-		break;
-	case sizeof(*i32):
-		i32 = data;
-		*i32 = swapEndian32(*i32);
-		break;
-	case sizeof(*i64):
-		i64 = data;
-		*i64 = swapEndian64(*i64);
-		break;
-	default:
-		assert(0);
-	}
+    switch (size)
+    {
+    case sizeof(char):
+        break;
+    case sizeof(uint16_t):
+    {
+        uint16_t i16;
+        memcpy((void*)&i16, data, sizeof(uint16_t));
+        i16 = swapEndian16(i16);
+        memcpy(data, (void*)&i16, sizeof(uint16_t));
+    }   break;
+    case sizeof(uint32_t):
+    {
+        uint32_t i32;
+        memcpy((void*)&i32, data, sizeof(uint32_t));
+        i32 = swapEndian32(i32);
+        memcpy(data, (void*)&i32, sizeof(uint32_t));
+    }   break;
+    case sizeof(uint64_t):
+    {
+        uint64_t i64;
+        memcpy((void*)&i64, data, sizeof(uint64_t));
+        i64 = swapEndian64(i64);
+        memcpy(data, (void*)&i64, sizeof(uint64_t));
+     }   break;
+    default:
+        assert(0);
+    }
 }
 
-/*! \brief Get data of size \a size at \a offset, and put it byteswapped into \a value */
+/*! \brief Get data of size \a size at \a offset, and put it byteswapped into \a value
+	\param value The value to write to
+	\param size The size of the message
+	\param offset The offset of the message
+*/
 void XsMessage_getEndianCorrectData(XsMessage const* thisPtr, void *value, XsSize size, XsSize offset)
 {
 	memcpy(value, (void const*) XsMessage_cdataAtOffset(thisPtr, offset), size);
 	swapEndian(value, size);
 }
 
-/*! \brief Set value \a value of size \a size byteswapped at \a offset */
+/*! \brief Set value \a value of size \a size byteswapped at \a offset
+	\param value The value to write to
+	\param size The size of the message
+	\param offset The offset of the message
+*/
 void XsMessage_setEndianCorrectData(XsMessage *thisPtr, void const *value, XsSize size, XsSize offset)
 {
 	void* dest;
@@ -297,6 +342,7 @@ void XsMessage_construct(XsMessage* thisPtr)
 }
 
 /*! \brief Construct an XsMessage as a copy of XsMessage \a src
+	\param src The source message to be copied
 */
 void XsMessage_copyConstruct(XsMessage* thisPtr, XsMessage const* src)
 {
@@ -914,7 +960,9 @@ void XsMessage_setDataRealValuesById(XsMessage* thisPtr, XsDataIdentifier dataId
 	}
 }
 
-/*! \brief Computes the checksum for the message */
+/*! \brief Computes the checksum for the message
+	\returns the computed checksum
+*/
 uint8_t XsMessage_computeChecksum(XsMessage const* thisPtr)
 {
 	XsSize i, msgSize;
@@ -944,7 +992,9 @@ int XsMessage_isChecksumOk(XsMessage const* thisPtr)
 	return thisPtr->m_checksum[0] == XsMessage_computeChecksum(thisPtr);
 }
 
-/*! \brief Returns a pointer to the message header for this message */
+/*! \brief Returns a pointer to the message header for this message
+	\returns a pointer to the header for this XsMessage
+*/
 XsMessageHeader* XsMessage_getHeader(XsMessage* thisPtr)
 {
 	return (XsMessageHeader*) (void*) thisPtr->m_message.m_data;
@@ -1204,6 +1254,9 @@ void XsMessage_swap(XsMessage* a, XsMessage* b)
 }
 
 /*! \brief Compare the contents of the messages \a a and \a b, returning non-0 if they are different
+	\param a the first XsMessage pointer to compare
+	\param b the first XsMessage pointer to compare
+	\returns 0 if the messages are equal
 */
 int XsMessage_compare(XsMessage const* a, XsMessage const* b)
 {

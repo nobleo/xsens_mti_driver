@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -223,6 +255,9 @@ XSTYPES_DLL_API void XsDataPacket_setGnssAge(XsDataPacket* thisPtr, uint8_t age)
 XSTYPES_DLL_API XsRawGnssSatInfo* XsDataPacket_rawGnssSatInfo(const XsDataPacket* thisPtr, XsRawGnssSatInfo* returnVal);
 XSTYPES_DLL_API int XsDataPacket_containsRawGnssSatInfo(const XsDataPacket* thisPtr);
 XSTYPES_DLL_API void XsDataPacket_setRawGnssSatInfo(XsDataPacket* thisPtr, const XsRawGnssSatInfo* r);
+XSTYPES_DLL_API uint32_t XsDataPacket_gnssPvtPulse(const XsDataPacket* thisPtr);
+XSTYPES_DLL_API int XsDataPacket_containsGnssPvtPulse(const XsDataPacket* thisPtr);
+XSTYPES_DLL_API void XsDataPacket_setGnssPvtPulse(XsDataPacket* thisPtr, uint32_t counter);
 
 XSTYPES_DLL_API XsDataPacket* XsDataPacket_merge(XsDataPacket* thisPtr, const XsDataPacket* other, int overwrite);
 XSTYPES_DLL_API void XsDataPacket_setTriggerIndication(XsDataPacket* thisPtr, XsDataIdentifier triggerId, const XsTriggerIndicationData * triggerIndicationData);
@@ -308,6 +343,15 @@ struct XsDataPacket {
 	{
 		XsDataPacket_swap(this, &other);
 	}
+
+#ifndef SWIG
+	/*! \brief Swaps \a first with \a second
+	*/
+	XSNOEXPORT inline friend void swap(XsDataPacket& first, XsDataPacket& second)
+	{
+		first.swap(second);
+	}
+#endif
 
 	/*! \copydoc XsDataPacket_clear(XsDataPacket*,XsDataIdentifier)*/
 	inline void clear(XsDataIdentifier id = XDI_None)
@@ -1262,6 +1306,27 @@ struct XsDataPacket {
 	{
 		XsDataPacket_setRawGnssSatInfo(this, &data);
 	}
+
+	/*! \brief \copybrief XsDataPacket_gnssPvtPulse(const XsDataPacket*)
+		\return a struct with GnssPvtPulse
+	*/
+	inline uint32_t gnssPvtPulse(void) const
+	{
+		return XsDataPacket_gnssPvtPulse(this);
+	}
+
+	/*! \brief \copybrief XsDataPacket_containsGnssPvtPulse(const XsDataPacket*) */
+	inline bool containsGnssPvtPulse(void) const
+	{
+		return 0 != XsDataPacket_containsGnssPvtPulse(this);
+	}
+
+	/*! \copydoc XsDataPacket_setGnssPvtPulse(XsDataPacket*, uint32_t) */
+	inline void setGnssPvtPulse(uint32_t counter)
+	{
+		XsDataPacket_setGnssPvtPulse(this, counter);
+	}
+
 	/*! \brief \copybrief XsDataPacket_fullSnapshot(const XsDataPacket*, XsSnapshot*) */
 	inline XsSnapshot fullSnapshot(void) const
 	{

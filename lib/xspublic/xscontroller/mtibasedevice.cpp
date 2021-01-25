@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -63,8 +95,6 @@ MtiBaseDevice::MtiBaseDevice(XsDevice* master)
 {
 }
 
-/*! \brief Default destructor
-*/
 MtiBaseDevice::~MtiBaseDevice()
 {
 }
@@ -233,6 +263,7 @@ XsSyncSettingArray MtiBaseDevice::syncSettingsFromBuffer(const uint8_t* buffer) 
 	XsSyncSettingArray rv;
 	for (XsSize i = 0; i < 10; ++i)
 	{
+		uint16_t tmp_pulseWidth;
 		XsSize offset = i*12;
 		XsSyncSetting ss;
 		ss.m_function = (XsSyncFunction) buffer[offset];
@@ -244,14 +275,15 @@ XsSyncSettingArray MtiBaseDevice::syncSettingsFromBuffer(const uint8_t* buffer) 
 		ss.m_triggerOnce = buffer[offset+3];
 		memcpy((void*) &ss.m_skipFirst, (void const*) &buffer[offset+4], sizeof(uint16_t));
 		memcpy((void*) &ss.m_skipFactor, (void const*) &buffer[offset+6], sizeof(uint16_t));
-		memcpy((void*) &ss.m_pulseWidth, (void const*) &buffer[offset+8], sizeof(int32_t));
-		ss.m_pulseWidth *= (uint32_t) timeResolution;
+		memcpy((void*) &tmp_pulseWidth, (void const*) &buffer[offset+8], sizeof(uint16_t));
+		ss.m_pulseWidth = (uint32_t) tmp_pulseWidth * (uint32_t) timeResolution;
 		if (ss.m_function == XSF_ClockBiasEstimation || ss.m_function == XSF_SampleAndSend)
 			memcpy((void*) &ss.m_clockPeriod, (void const*) &buffer[offset+10], sizeof(uint16_t));
 		else
 		{
-			memcpy((void*) &ss.m_offset, (void const*) &buffer[offset+10], sizeof(int32_t));
-			ss.m_offset *= (int32_t) timeResolution;
+			int16_t tmp_offset;
+			memcpy((void*) &tmp_offset, (void const*) &buffer[offset+10], sizeof(int16_t));
+			ss.m_offset = (int32_t) tmp_offset * (int32_t) timeResolution;
 		}
 
 		rv.push_back(ss);

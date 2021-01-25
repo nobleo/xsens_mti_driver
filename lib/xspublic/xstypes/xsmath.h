@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -40,7 +72,12 @@
 #include <float.h>
 #include "xsfloatmath.h"
 
-#ifdef __cplusplus
+#if defined(SQUISHCOCO)
+#define XSMATHCONST		static const
+#define XSMATHINLINE2	static
+#define XSMATHINLINE	static
+#else	// normal operation
+#if defined( __cplusplus)
 #if defined(__ADSP21000__)
 #define XSMATHCONST		static const
 #define XSMATHINLINE	inline static
@@ -56,6 +93,7 @@
 #define XSMATHCONST		static const
 #define XSMATHINLINE	static
 #define XSMATHINLINE2	static
+#endif
 #endif
 
 /*! \namespace XsMath
@@ -172,6 +210,13 @@ XSMATHINLINE XsReal XsMath_pow3(XsReal a)
 	return a*a*a;
 }
 
+/*!	\brief Returns \a a to the power of 5
+*/
+XSMATHINLINE XsReal XsMath_pow5(XsReal a)
+{
+	return XsMath_pow2(a)*XsMath_pow3(a);
+}
+
 /*! \brief Returns non-zero if \a x is finite
 */
 XSMATHINLINE2 int XsMath_isFinite(XsReal x)
@@ -215,140 +260,36 @@ XSMATHINLINE2 int XsMath_isFinite(XsReal x)
 
 /*! \brief Returns \a d integer converted from a single precision floating point value
 */
-XSMATHINLINE int32_t XsMath_floatToLong(float d)
+XSMATHINLINE2 int32_t XsMath_floatToLong(float d)
 {
 	return (d >= 0) ? (int32_t) floorf(d+0.5f) : (int32_t) ceilf(d-0.5f);
 }
 
 /*! \brief Returns \a d integer converted from a single precision floating point value
 */
-XSMATHINLINE int64_t XsMath_floatToInt64(float d)
+XSMATHINLINE2 int64_t XsMath_floatToInt64(float d)
 {
 	return (d >= 0) ? (int64_t) floorf(d+0.5f) : (int64_t) ceilf(d-0.5f);
 }
 
 /*! \brief Returns \a d integer converted from a double precision floating point value
 */
-XSMATHINLINE int32_t XsMath_doubleToLong(double d)
+XSMATHINLINE2 int32_t XsMath_doubleToLong(double d)
 {
 	return (d >= 0) ? (int32_t) floor(d+0.5) : (int32_t) ceil(d-0.5);
 }
 
 /*! \brief Returns \a d integer converted from a double precision floating point value
 */
-XSMATHINLINE int64_t XsMath_doubleToInt64(double d)
+XSMATHINLINE2 int64_t XsMath_doubleToInt64(double d)
 {
 	return (d >= 0) ? (int64_t) floor(d+0.5) : (int64_t) ceil(d-0.5);
 }
 
 #ifdef __cplusplus
-namespace XsMath {
-#ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
+#ifndef XSMATH2_H
+#include "xsmath2.h"
 #endif
-	//! \brief The value e
-	XSMATHCONST XsReal e = XsMath_e;
-	//! \brief The value pi
-	XSMATHCONST XsReal pi = XsMath_pi;
-	//! \brief A really small value
-	XSMATHCONST XsReal tinyValue = XsMath_tinyValue;
-	//! \brief A convincingly large number
-	XSMATHCONST XsReal hugeValue = XsMath_hugeValue;
-	//! \brief A value related to the precision of floating point arithmetic (2.2204460492503131e-016)
-	XSMATHCONST XsReal epsilon = XsMath_epsilon;
-	/*! \brief Square root of epsilon
-		\sa epsilon
-	*/
-	XSMATHCONST XsReal sqrtEpsilon = XsMath_sqrtEpsilon;
-	//! \brief Value that represents the subnormal number in floating point wizardry
-	XSMATHCONST XsReal denormalized = XsMath_denormalized;
-	/*! \brief Square root of denormalized
-		\sa denormalized
-	*/
-	XSMATHCONST XsReal sqrtDenormalized = XsMath_sqrtDenormalized;
-	//! \brief Value to convert radians to degrees by multiplication
-	XSMATHCONST XsReal rad2degValue = XsMath_rad2degValue;
-	//! \brief Value to convert degrees to radians by multiplication
-	XSMATHCONST XsReal deg2radValue = XsMath_deg2radValue;
-	//! \brief 0
-	XSMATHCONST XsReal zero = XsMath_zero;
-	//! \brief 0.25
-	XSMATHCONST XsReal pt25 = XsMath_pt25;
-	//! \brief 0.5
-	XSMATHCONST XsReal pt5 = XsMath_pt5;
-	//! \brief -0.5
-	XSMATHCONST XsReal minusPt5 = XsMath_minusPt5;
-	//! \brief 1
-	XSMATHCONST XsReal one = XsMath_one;
-	//! \brief -1
-	XSMATHCONST XsReal minusOne = XsMath_minusOne;
-	//! \brief 2
-	XSMATHCONST XsReal two = XsMath_two;
-	//! \brief 4
-	XSMATHCONST XsReal four = XsMath_four;
-	//! \brief -2
-	XSMATHCONST XsReal minusTwo = XsMath_minusTwo;
-	//! \brief -pi/2
-	XSMATHCONST XsReal minusHalfPi = XsMath_minusHalfPi;
-	//! \brief pi/2
-	XSMATHCONST XsReal halfPi = XsMath_halfPi;
-	//! \brief 2*pi
-	XSMATHCONST XsReal twoPi = XsMath_twoPi;
-	//! \brief sqrt(2)
-	XSMATHCONST XsReal sqrt2 = XsMath_sqrt2;
-	//! \brief sqrt(0.5)
-	XSMATHCONST XsReal sqrtHalf = XsMath_sqrtHalf;
-	//! \brief infinity
-	XSMATHCONST XsReal infinity = XsMath_infinity;
-#ifdef __GNUC__
-#pragma GCC diagnostic pop
-#endif
-
-	//! \brief \copybrief XsMath_asinClamped
-	XSMATHINLINE XsReal asinClamped(XsReal x)
-	{
-		return XsMath_asinClamped(x);
-	}
-
-	//! \brief \copybrief XsMath_rad2deg
-	XSMATHINLINE XsReal rad2deg(XsReal radians)
-	{
-		return XsMath_rad2deg(radians);
-	}
-
-	//! \brief \copybrief XsMath_deg2rad
-	XSMATHINLINE XsReal deg2rad(XsReal degrees)
-	{
-		return XsMath_deg2rad(degrees);
-	}
-
-	//! \brief \copybrief XsMath_pow2
-	XSMATHINLINE XsReal pow2(XsReal a)
-	{
-		return XsMath_pow2(a);
-	}
-
-	//! \brief \copybrief XsMath_pow3
-	XSMATHINLINE XsReal pow3(XsReal a)
-	{
-		return XsMath_pow3(a);
-	}
-
-	//! \brief \copybrief XsMath_doubleToLong
-	XSMATHINLINE int32_t doubleToLong(double d)
-	{
-		return XsMath_doubleToLong(d);
-	}
-
-#ifndef XSENS_NO_INT64
-	//! \brief \copybrief XsMath_doubleToInt64
-	XSMATHINLINE int64_t doubleToInt64(double d)
-	{
-		return XsMath_doubleToInt64(d);
-	}
-#endif
-}	// namespace
 #endif
 
 /*! @} */

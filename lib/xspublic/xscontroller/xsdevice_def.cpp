@@ -1,5 +1,37 @@
 
-//  Copyright (c) 2003-2019 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  All rights reserved.
+//
+//  Redistribution and use in source and binary forms, with or without modification,
+//  are permitted provided that the following conditions are met:
+//
+//  1.	Redistributions of source code must retain the above copyright notice,
+//  	this list of conditions, and the following disclaimer.
+//
+//  2.	Redistributions in binary form must reproduce the above copyright notice,
+//  	this list of conditions, and the following disclaimer in the documentation
+//  	and/or other materials provided with the distribution.
+//
+//  3.	Neither the names of the copyright holders nor the names of their contributors
+//  	may be used to endorse or promote products derived from this software without
+//  	specific prior written permission.
+//
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+//  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+//  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+//  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
+//  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
+//
+
+
+//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without modification,
@@ -269,9 +301,8 @@ XsDevice::~XsDevice()
 }
 
 /*! \brief Return the master device of this device
-	\details This function returns the master device of the current device. This may be the device
-	itself
-	\returns The master device of the device
+	\details This function returns the master device of the current device. This may be the device itself
+	\returns The master device of this device
 */
 XsDevice *XsDevice::master() const
 {
@@ -279,6 +310,7 @@ XsDevice *XsDevice::master() const
 }
 
 /*! \cond XS_INTERNAL */
+//! \brief Remove all defined data processing components for this device
 void XsDevice::clearProcessors()
 {
 }
@@ -294,12 +326,11 @@ void XsDevice::prepareForTermination()
 
 		updateDeviceState(XDS_Destructing);
 
-		if (isMasterDevice())
+		if (isMasterDevice() && m_communicator != nullptr && m_communicator->isPortOpen())
 		{
 			if (m_gotoConfigOnClose)
 				gotoConfig();
-			if (m_communicator != nullptr)
-				m_communicator->closePort();
+			m_communicator->closePort();
 		}
 		// finishLastProcessingTask();	// make sure no processing is going on in the background either...
 		m_terminationPrepared = true;
@@ -416,6 +447,7 @@ void XsDevice::updateDeviceState(XsDeviceState newState)
 		}
 
 		m_state = newState;
+		lockG.unlock();
 		locky.unlock();
 		onDeviceStateChanged(this, newState, oldState);
 	}
@@ -831,7 +863,7 @@ bool XsDevice::setSerialBaudRate(XsBaudRate baudrate)
 	snd.setBusId(XS_BID_MASTER);
 	snd.setDataByte(XsBaud::rateToCode(baudrate));
 
-	if (!doTransaction(snd, 500))
+	if (!doTransaction(snd, 1000))//increased from 500 to 1000, since the One Series timed out very rarely with the old value
 		return false;
 
 	if (comm->portInfo().baudrate() == XBR_Invalid ||
@@ -1373,6 +1405,10 @@ void XsDevice::handleMessage(const XsMessage &msg)
 		handleMasterIndication(msg);
 		break;
 
+	case XMID_Wakeup:
+		handleWakeupMessage(msg);
+		break;
+
 	default:
 		JLDEBUGG("Handling non-data msg " << msg.getMessageId() << " bid " << JLHEXLOG((int)msg.getBusId()));
 		handleNonDataMessage(msg);
@@ -1402,6 +1438,14 @@ void XsDevice::handleErrorMessage(const XsMessage &msg)
 void XsDevice::handleWarningMessage(const XsMessage& msg)
 {
 	onNonDataMessage(this, &msg);
+}
+
+/*! \brief Process a wakeup message
+*/
+void XsDevice::handleWakeupMessage(const XsMessage& msg)
+{
+	(void)msg;
+	onWakeupReceived(this);
 }
 
 /*! \brief Inserts the packet ID and data packet into the data cache
@@ -2170,6 +2214,8 @@ void XsDevice::checkDataCache()
 
 		auto missingDataIsUnavailable = [this](int64_t rFirst, int64_t rLast)
 		{
+			if (m_options & XSO_ExpectNoRetransmissionsInFile)
+				return true;
 			if ((m_stopRecordingPacketId >= 0 && rFirst > m_stopRecordingPacketId) ||
 				(rLast-1 <= m_unavailableDataBoundary))
 			{
@@ -2832,23 +2878,25 @@ bool XsDevice::setFixedGravityEnabled(bool enable)
 	return false;
 }
 
-/*! \cond XS_INTERNAL */
-/*! \brief Sets a lever arm vector
+/*! \brief Sets the GNSS Lever Arm vector
+	\details GNSS Lever arm is the length/pos of the antenna w.r.t. the center of the sensor
+			It is a 3-vector: x,y,z
 	\param arm The lever arm vector
 	\returns True if successful
 */
-bool XsDevice::setLeverArm(const XsVector &arm)
+bool XsDevice::setGnssLeverArm(const XsVector& arm)
 {
 	(void)arm;
 	return false;
 }
 
-/*! \returns The lever arm vector. */
-XsVector XsDevice::leverArm() const
+/*! \returns The GNSS Lever Arm vector. */
+XsVector XsDevice::gnssLeverArm() const
 {
 	return XsVector();
 }
 
+/*! \cond XS_INTERNAL */
 /*! \brief Requests UTC time. */
 bool XsDevice::requestUtcTime()
 {
@@ -3153,7 +3201,6 @@ bool XsDevice::updateCachedDeviceInformation()
 
 	return initialize();
 }
-///@} end Sensor Data
 
 /*! \cond XS_INTERNAL */
 /*!	\brief Initializes the device using the supplied filter profiles
@@ -3345,6 +3392,14 @@ XsOption XsDevice::getOptions() const
 XsString XsDevice::productCode() const
 {
 	return XsString();
+}
+
+/*! \brief Return the shortened product code of the device suitable for display
+	\returns The short product code of the device
+*/
+XsString XsDevice::shortProductCode() const
+{
+	return productCode();
 }
 
 /*!	\brief Return the hardware version of the device
@@ -3708,7 +3763,7 @@ XsSize XsDevice::refCounter() const
 }
 
 /*! \brief Decrease this XsDevices reference counter with 1
-	Also decreases the reference count of each child with 1
+	\details Also decreases the reference count of each child with 1
 	- If it is a child device, it will delete itself when the reference count reaches zero.
 	  It will also remove itself from its master's child list and ask the master if it can be deleted
 	- If it is a master device, it will delete itself when the reference count reaches zero and the reference count
@@ -3735,7 +3790,7 @@ void XsDevice::removeRef()
 	\param data The data buffer
 	\param pageNr The page number
 	\param bankNr The bank number
-	\returns True if succesful
+	\returns True if successful
 */
 bool XsDevice::writeEmtsPage(uint8_t const* data, int pageNr, int bankNr)
 {
@@ -3807,12 +3862,14 @@ void XsDevice::onWirelessConnectionLost()
 	updateConnectivityState(XCS_Disconnected);
 }
 
+/*! \return The packet ID of the cached latest Live packet */
 int64_t XsDevice::latestLivePacketId() const
 {
 	LockGuarded locky(&m_deviceMutex);
 	return latestLivePacketConst().packetId();
 }
 
+/*! \return The packet ID of the cached latest Buffered packet */
 int64_t XsDevice::latestBufferedPacketId() const
 {
 	LockGuarded locky(&m_deviceMutex);
@@ -4368,6 +4425,7 @@ bool XsDevice::setGnssPlatform(XsGnssPlatform gnssPlatform)
 }
 
 /*! \cond XS_INTERNAL */
+//! \brief Reinitialize all defined data processing components for this device
 void XsDevice::reinitializeProcessors()
 {
 	// intentionally empty, private implementation
