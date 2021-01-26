@@ -62,32 +62,122 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //
 
-#ifndef DEVICETYPES_H
-#define DEVICETYPES_H
+#include "mti3x0device.h"
 
-#include "devicefactory.h"
+#include <xstypes/xsdatapacket.h>
+#include "replyobject.h"
+#include "communicator.h"
+#include "scenariomatchpred.h"
+#include <xstypes/xsstatusflag.h>
 
-namespace DeviceType {
-	static const DeviceFactory::DeviceTypeId BODYPACK				= 5;
-	static const DeviceFactory::DeviceTypeId AWINDA2STATION			= 6;
-	static const DeviceFactory::DeviceTypeId AWINDA2DONGLE			= 7;
-	static const DeviceFactory::DeviceTypeId AWINDA2OEM				= 8;
-	static const DeviceFactory::DeviceTypeId SYNCSTATION			= 9;
-	static const DeviceFactory::DeviceTypeId MTI_X					= 20;
-	static const DeviceFactory::DeviceTypeId MTI_X0					= 21;
-	static const DeviceFactory::DeviceTypeId MTI_X00				= 22;
-	static const DeviceFactory::DeviceTypeId MTIG					= 23;
-	static const DeviceFactory::DeviceTypeId MTI_7					= 24;
-	static const DeviceFactory::DeviceTypeId MTI_6X0				= 25;
-	static const DeviceFactory::DeviceTypeId MTI_8X0				= 26;
-	static const DeviceFactory::DeviceTypeId MTI_3X0				= 27;
-	static const DeviceFactory::DeviceTypeId MTX2					= 30;
-	static const DeviceFactory::DeviceTypeId GLOVE					= 50;
-	static const DeviceFactory::DeviceTypeId MTW2					= 80;
-	static const DeviceFactory::DeviceTypeId IMARIFOG				= 100;
-	static const DeviceFactory::DeviceTypeId IMARFSAS				= 101;
-	static const DeviceFactory::DeviceTypeId ABMCLOCKMASTER			= 200;
-	static const DeviceFactory::DeviceTypeId HILDEVICE				= 300;
+#include <xstypes/xssensorranges.h>
+#include "synclinegmt.h"
+#include <xstypes/xssyncsetting.h>
+
+using namespace xsens;
+
+/*! \brief Constructs a device
+	\param comm The communicator to construct with
+*/
+Mti3X0Device::Mti3X0Device(Communicator* comm)
+	: MtiBaseDeviceEx(comm)
+{
+	if (comm)
+		comm->setDefaultTimeout(2000); //Increase the default timeout for MTi-3X0 devices because a settings write can occasionally take ~900ms
 }
 
-#endif
+/*! \brief Destroys a device
+*/
+Mti3X0Device::~Mti3X0Device()
+{
+}
+
+/*! \brief Returns the base update rate (Hz) corresponding to the dataType. Returns 0 if no update rate is available
+*/
+MtiBaseDevice::BaseFrequencyResult Mti3X0Device::getBaseFrequencyInternal(XsDataIdentifier dataType) const
+{
+	MtiBaseDevice::BaseFrequencyResult result;
+	result.m_frequency = 0;
+	result.m_divedable = true;
+
+	if ((dataType == XDI_FreeAcceleration && deviceId().isImu()) ||
+		((dataType & XDI_FullTypeMask) == XDI_LocationId) ||
+		((dataType & XDI_FullTypeMask) == XDI_DeviceId))
+		return result;
+
+	if ((dataType & XDI_FullTypeMask) == XDI_AccelerationHR || (dataType & XDI_FullTypeMask) == XDI_RateOfTurnHR)
+	{
+		result.m_frequency = 800;
+		result.m_divedable = true;
+
+		return result;
+	}
+
+	auto baseFreq = [this](XsDataIdentifier dataType)
+	{
+		switch (dataType & XDI_TypeMask)
+		{
+		case XDI_None:					return 100;
+		case XDI_TimestampGroup:		return XDI_MAX_FREQUENCY_VAL;
+		case XDI_StatusGroup:			return 100;
+		case XDI_TemperatureGroup:		return 100;
+		case XDI_OrientationGroup:		return deviceId().isImu() ? 0 : 100;
+		case XDI_AccelerationGroup:		return 100;
+		case XDI_AngularVelocityGroup:	return 100;
+		case XDI_MagneticGroup:			return 100;
+
+		case XDI_GnssGroup:				return deviceId().isGnss() ? 4 : 0;
+		case XDI_PressureGroup:			return deviceId().isGnss() ? 50 : 0;
+		case XDI_PositionGroup:			return deviceId().isGnss() ? 100 : 0;
+		case XDI_VelocityGroup:			return deviceId().isGnss() ? 100 : 0;
+		default:						return 0;
+		}
+	};
+	result.m_frequency = baseFreq(dataType);
+
+	if ((dataType & XDI_TypeMask) == XDI_TimestampGroup)
+		result.m_divedable = false;
+
+	return result;
+}
+
+/*! \returns True if this device has an ICC support
+*/
+bool Mti3X0Device::hasIccSupport() const
+{
+	return true;
+}
+
+uint32_t Mti3X0Device::supportedStatusFlags() const
+{
+	return (uint32_t) (XSF_ExternalClockSynced
+		| (deviceId().isImu() ? 0 : XSF_OrientationValid
+			|XSF_NoRotationMask
+			|XSF_RepresentativeMotion
+			)
+		|XSF_ClipAccX
+		|XSF_ClipAccY
+		|XSF_ClipAccZ
+		|XSF_ClipGyrX
+		|XSF_ClipGyrY
+		|XSF_ClipGyrZ
+		|XSF_ClipMagX
+		|XSF_ClipMagY
+		|XSF_ClipMagZ
+		//|XSF_Retransmitted
+		|XSF_ClippingDetected
+		//|XSF_Interpolated
+		|XSF_SyncIn
+		|XSF_SyncOut
+		//|XSF_FilterMode
+		//|XSF_HaveGnssTimePulse
+		);
+}
+
+/*! \copybrief XsDevice::shortProductCode
+*/
+XsString Mti3X0Device::shortProductCode() const
+{
+	XsString code = productCode();
+	return stripProductCode(code);
+}

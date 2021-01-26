@@ -115,7 +115,7 @@ XsSyncSettingArray supportedSyncSettings(XsDeviceId const& deviceId)
 	{
 		return supportedSyncSettingsForMt6x0Device();
 	}
-	else if (deviceId.isMtiX())
+	else if (deviceId.isMtiX() || deviceId.isMti3X0())
 	{
 		return supportedSyncSettingsForMtiXDevice();
 	}
