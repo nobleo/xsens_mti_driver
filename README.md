@@ -12,7 +12,7 @@ Changes done with respect to the orginal source:
   You can find the full documentation in "<your MT SDK directory>/doc/xsensdeviceapi/doc/html/index.html" under "ROS MTi driver" section.
 
 # Prerequisites:
-  - ROS Kinetic or Melodic
+  - ROS Kinetic, Melodic or Noetic
   - C/C++ Compiler: GCC 5.4.0 or MSVC 14.0
   - C++11
 
