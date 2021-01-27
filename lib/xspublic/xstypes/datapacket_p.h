@@ -88,9 +88,11 @@
 #include "xssnapshot.h"
 
 /*! \cond XS_INTERNAL */
-namespace XsDataPacket_Private {
+namespace XsDataPacket_Private
+{
 	/*! \brief Abstract Variant class for handling contents of XsDataPacket */
-	class Variant {
+	class Variant
+	{
 	public:
 		/*! \brief Constructor, sets the dataId to \a id */
 		Variant(XsDataIdentifier id) : m_id(id) {}
@@ -140,7 +142,8 @@ namespace XsDataPacket_Private {
 
 	/*! \brief Generic base class template for Variant subclasses */
 	template <typename T, int C = 1>
-	class GenericVariant : public Variant {
+	class GenericVariant : public Variant
+	{
 	public:
 		/*! \brief Constructor, sets the dataId to \a id */
 		GenericVariant(XsDataIdentifier id) : Variant(id) {}
@@ -188,7 +191,8 @@ namespace XsDataPacket_Private {
 
 	/*! \brief Template base class for simple single value Variants. memcpy is assumed to result in valid objects */
 	template <typename T>
-	struct SimpleVariant : public GenericVariant<T, 1> {
+	struct SimpleVariant : public GenericVariant<T, 1>
+	{
 		using GenericVariant<T, 1>::dataId;
 
 		/*! \brief Constructor, sets the dataId to \a id */
@@ -502,7 +506,7 @@ namespace XsDataPacket_Private {
 
 			// month, day, hour, minute, second and valid
 			uint8_t const* bareByte = (uint8_t const*) &m_data.m_month;
-			for (XsSize i=0; i<6;++i)
+		for (XsSize i=0; i<6; ++i)
 				XsMessage_setDataByte(&msg, bareByte[i], offset + 6 + i);
 
 			// utcOffset is ignored and assumed to be 0, use makeUtc to ensure this if necessary
@@ -568,41 +572,41 @@ namespace XsDataPacket_Private {
 		}
 		void writeToMessage(XsMessage& msg, XsSize offset) const override
 		{
-			XsMessage_setDataLong (&msg, m_data.m_itow   , offset + 0);
-			XsMessage_setDataShort(&msg, m_data.m_year   , offset + 4);
-			XsMessage_setDataByte (&msg, m_data.m_month  , offset + 6);
-			XsMessage_setDataByte (&msg, m_data.m_day    , offset + 7);
-			XsMessage_setDataByte (&msg, m_data.m_hour   , offset + 8);
-			XsMessage_setDataByte (&msg, m_data.m_min    , offset + 9);
-			XsMessage_setDataByte (&msg, m_data.m_sec    , offset + 10);
-			XsMessage_setDataByte (&msg, m_data.m_valid  , offset + 11);
-			XsMessage_setDataLong (&msg, m_data.m_tAcc   , offset + 12);
-			XsMessage_setDataLong (&msg, m_data.m_nano   , offset + 16);
+		XsMessage_setDataLong (&msg, m_data.m_itow, offset + 0);
+		XsMessage_setDataShort(&msg, m_data.m_year, offset + 4);
+		XsMessage_setDataByte (&msg, m_data.m_month, offset + 6);
+		XsMessage_setDataByte (&msg, m_data.m_day, offset + 7);
+		XsMessage_setDataByte (&msg, m_data.m_hour, offset + 8);
+		XsMessage_setDataByte (&msg, m_data.m_min, offset + 9);
+		XsMessage_setDataByte (&msg, m_data.m_sec, offset + 10);
+		XsMessage_setDataByte (&msg, m_data.m_valid, offset + 11);
+		XsMessage_setDataLong (&msg, m_data.m_tAcc, offset + 12);
+		XsMessage_setDataLong (&msg, m_data.m_nano, offset + 16);
 			XsMessage_setDataByte (&msg, m_data.m_fixType, offset + 20);
-			XsMessage_setDataByte (&msg, m_data.m_flags  , offset + 21);
-			XsMessage_setDataByte (&msg, m_data.m_numSv  , offset + 22);
-			XsMessage_setDataByte (&msg, m_data.m_res1   , offset + 23);
-			XsMessage_setDataLong (&msg, m_data.m_lon    , offset + 24);
-			XsMessage_setDataLong (&msg, m_data.m_lat    , offset + 28);
-			XsMessage_setDataLong (&msg, m_data.m_height , offset + 32);
-			XsMessage_setDataLong (&msg, m_data.m_hMsl   , offset + 36);
-			XsMessage_setDataLong (&msg, m_data.m_hAcc   , offset + 40);
-			XsMessage_setDataLong (&msg, m_data.m_vAcc   , offset + 44);
-			XsMessage_setDataLong (&msg, m_data.m_velN   , offset + 48);
-			XsMessage_setDataLong (&msg, m_data.m_velE   , offset + 52);
-			XsMessage_setDataLong (&msg, m_data.m_velD   , offset + 56);
-			XsMessage_setDataLong (&msg, m_data.m_gSpeed , offset + 60);
+		XsMessage_setDataByte (&msg, m_data.m_flags, offset + 21);
+		XsMessage_setDataByte (&msg, m_data.m_numSv, offset + 22);
+		XsMessage_setDataByte (&msg, m_data.m_res1, offset + 23);
+		XsMessage_setDataLong (&msg, m_data.m_lon, offset + 24);
+		XsMessage_setDataLong (&msg, m_data.m_lat, offset + 28);
+		XsMessage_setDataLong (&msg, m_data.m_height, offset + 32);
+		XsMessage_setDataLong (&msg, m_data.m_hMsl, offset + 36);
+		XsMessage_setDataLong (&msg, m_data.m_hAcc, offset + 40);
+		XsMessage_setDataLong (&msg, m_data.m_vAcc, offset + 44);
+		XsMessage_setDataLong (&msg, m_data.m_velN, offset + 48);
+		XsMessage_setDataLong (&msg, m_data.m_velE, offset + 52);
+		XsMessage_setDataLong (&msg, m_data.m_velD, offset + 56);
+		XsMessage_setDataLong (&msg, m_data.m_gSpeed, offset + 60);
 			XsMessage_setDataLong (&msg, m_data.m_headMot, offset + 64);
-			XsMessage_setDataLong (&msg, m_data.m_sAcc   , offset + 68);
+		XsMessage_setDataLong (&msg, m_data.m_sAcc, offset + 68);
 			XsMessage_setDataLong (&msg, m_data.m_headAcc, offset + 72);
 			XsMessage_setDataLong (&msg, m_data.m_headVeh, offset + 76);
-			XsMessage_setDataShort(&msg, m_data.m_gdop   , offset + 80);
-			XsMessage_setDataShort(&msg, m_data.m_pdop   , offset + 82);
-			XsMessage_setDataShort(&msg, m_data.m_tdop   , offset + 84);
-			XsMessage_setDataShort(&msg, m_data.m_vdop   , offset + 86);
-			XsMessage_setDataShort(&msg, m_data.m_hdop   , offset + 88);
-			XsMessage_setDataShort(&msg, m_data.m_ndop   , offset + 90);
-			XsMessage_setDataShort(&msg, m_data.m_edop   , offset + 92);
+		XsMessage_setDataShort(&msg, m_data.m_gdop, offset + 80);
+		XsMessage_setDataShort(&msg, m_data.m_pdop, offset + 82);
+		XsMessage_setDataShort(&msg, m_data.m_tdop, offset + 84);
+		XsMessage_setDataShort(&msg, m_data.m_vdop, offset + 86);
+		XsMessage_setDataShort(&msg, m_data.m_hdop, offset + 88);
+		XsMessage_setDataShort(&msg, m_data.m_ndop, offset + 90);
+		XsMessage_setDataShort(&msg, m_data.m_edop, offset + 92);
 		}
 
 		XsSize sizeInMsg() const override
@@ -645,19 +649,19 @@ namespace XsDataPacket_Private {
 		}
 		void writeToMessage(XsMessage& msg, XsSize offset) const override
 		{
-			XsMessage_setDataLong(&msg, m_data.m_itow   , offset + 0);
-			XsMessage_setDataByte(&msg, m_data.m_numSvs , offset + 4);
-			XsMessage_setDataByte(&msg, m_data.m_res1   , offset + 5);
-			XsMessage_setDataByte(&msg, m_data.m_res2   , offset + 6);
-			XsMessage_setDataByte(&msg, m_data.m_res3   , offset + 7);
+		XsMessage_setDataLong(&msg, m_data.m_itow, offset + 0);
+		XsMessage_setDataByte(&msg, m_data.m_numSvs, offset + 4);
+		XsMessage_setDataByte(&msg, m_data.m_res1, offset + 5);
+		XsMessage_setDataByte(&msg, m_data.m_res2, offset + 6);
+		XsMessage_setDataByte(&msg, m_data.m_res3, offset + 7);
 
 			offset = offset + 8;
 			for (uint8_t i = 0; i < m_data.m_numSvs; ++i)
 			{
-				XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_gnssId , offset + 0);
-				XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_svId   , offset + 1);
-				XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_cno    , offset + 2);
-				XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_flags  , offset + 3);
+			XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_gnssId, offset + 0);
+			XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_svId, offset + 1);
+			XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_cno, offset + 2);
+			XsMessage_setDataByte(&msg, m_data.m_satInfos[i].m_flags, offset + 3);
 				offset += 4;
 			}
 		}
@@ -943,16 +947,17 @@ namespace XsDataPacket_Private {
 				for (int j = 0; j < 3; ++j)
 				{
 					{
-						auto& tmp = m_data.m_fingers[i].m_iV[j];
-						m_data.m_fingers[i].m_iV[j] = (uint32_t)swapEndian32(tmp);
+						auto tmp = m_data.m_fingers[i].m_iV[j];
+						m_data.m_fingers[i].m_iV[j] = (int32_t)swapEndian32(tmp);
 					}
 					{
-						auto& tmp = m_data.m_fingers[i].m_mag[j];
-						tmp = (int16_t)swapEndian16(tmp);
+						auto tmp = m_data.m_fingers[i].m_mag[j];
+						m_data.m_fingers[i].m_mag[j] = (int16_t)swapEndian16(tmp);
 					}
 				}
 				{
-					//const auto& tmp = swapEndian16(m_data.m_fingers[i].m_flags);
+					auto tmp = m_data.m_fingers[i].m_flags;
+					m_data.m_fingers[i].m_flags = swapEndian16(tmp);
 				}
 			}
 

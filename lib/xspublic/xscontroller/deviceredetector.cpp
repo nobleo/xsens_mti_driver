@@ -88,7 +88,7 @@ DeviceRedetector::DeviceRedetector(const XsPortInfo &portInfo)
 		m_detectFunctions[XS_DID_TYPEH_MT_X_MPU] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XS_DID_TYPEH_MT_X0] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XS_DID_TYPEH_MT_X00] = &DeviceRedetector::redetectScanPorts;
-		m_detectFunctions[XS_DID_TYPEH_MTI2GO] = &DeviceRedetector::redetectScanPorts;
+		m_detectFunctions[XS_DID_TYPEH_MT_3X0] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XS_DID64_BIT] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XsDeviceId("MTi-610", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XsDeviceId("MTi-620", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectScanPorts;
@@ -100,7 +100,7 @@ DeviceRedetector::DeviceRedetector(const XsPortInfo &portInfo)
 		m_detectFunctions[XS_DID_TYPEH_MT_X_MPU] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XS_DID_TYPEH_MT_X0] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XS_DID_TYPEH_MT_X00] = &DeviceRedetector::redetectOneComPort;
-		m_detectFunctions[XS_DID_TYPEH_MTI2GO] = &DeviceRedetector::redetectOneComPort;
+		m_detectFunctions[XS_DID_TYPEH_MT_3X0] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XS_DID64_BIT] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XsDeviceId("MTi-610", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XsDeviceId("MTi-620", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectOneComPort;

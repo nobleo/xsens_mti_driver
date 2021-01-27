@@ -88,9 +88,9 @@ XSTYPES_DLL_API int XsDeviceId_isMtiX0(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtiX00(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtigX00(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtigX10(struct XsDeviceId const* thisPtr);
+XSTYPES_DLL_API int XsDeviceId_isMti3X0(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMti6X0(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMti8X0(struct XsDeviceId const* thisPtr);
-XSTYPES_DLL_API int XsDeviceId_isMti2GO(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtw(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtw2(struct XsDeviceId const* thisPtr);
 XSTYPES_DLL_API int XsDeviceId_isMtx(struct XsDeviceId const* thisPtr);
@@ -283,6 +283,11 @@ struct XsDeviceId
 	{
 		return 0 != XsDeviceId_isMtigX10(this);
 	}
+	/*! \brief \copybrief XsDeviceId_isMti3X0(const struct XsDeviceId*) */
+	inline bool isMti3X0() const
+	{
+		return 0 != XsDeviceId_isMti3X0(this);
+	}
 	/*! \brief \copybrief XsDeviceId_isMti6X0(const struct XsDeviceId*) */
 	inline bool isMti6X0() const
 	{
@@ -292,11 +297,6 @@ struct XsDeviceId
 	inline bool isMti8X0() const
 	{
 		return 0 != XsDeviceId_isMti8X0(this);
-	}
-	/*! \brief \copybrief XsDeviceId_isMti2GO(const struct XsDeviceId*) */
-	inline bool isMti2GO() const
-	{
-		return 0 != XsDeviceId_isMti2GO(this);
 	}
 	/*! \brief \copybrief XsDeviceId_isGlove(const struct XsDeviceId*) */
 	inline bool isGlove () const

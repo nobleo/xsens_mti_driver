@@ -62,32 +62,55 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //
 
-#ifndef DEVICETYPES_H
-#define DEVICETYPES_H
+#ifndef XSMTI3X0DEVICE_H
+#define XSMTI3X0DEVICE_H
 
-#include "devicefactory.h"
+#include "mtibasedevice.h"
 
-namespace DeviceType {
-	static const DeviceFactory::DeviceTypeId BODYPACK				= 5;
-	static const DeviceFactory::DeviceTypeId AWINDA2STATION			= 6;
-	static const DeviceFactory::DeviceTypeId AWINDA2DONGLE			= 7;
-	static const DeviceFactory::DeviceTypeId AWINDA2OEM				= 8;
-	static const DeviceFactory::DeviceTypeId SYNCSTATION			= 9;
-	static const DeviceFactory::DeviceTypeId MTI_X					= 20;
-	static const DeviceFactory::DeviceTypeId MTI_X0					= 21;
-	static const DeviceFactory::DeviceTypeId MTI_X00				= 22;
-	static const DeviceFactory::DeviceTypeId MTIG					= 23;
-	static const DeviceFactory::DeviceTypeId MTI_7					= 24;
-	static const DeviceFactory::DeviceTypeId MTI_6X0				= 25;
-	static const DeviceFactory::DeviceTypeId MTI_8X0				= 26;
-	static const DeviceFactory::DeviceTypeId MTI_3X0				= 27;
-	static const DeviceFactory::DeviceTypeId MTX2					= 30;
-	static const DeviceFactory::DeviceTypeId GLOVE					= 50;
-	static const DeviceFactory::DeviceTypeId MTW2					= 80;
-	static const DeviceFactory::DeviceTypeId IMARIFOG				= 100;
-	static const DeviceFactory::DeviceTypeId IMARFSAS				= 101;
-	static const DeviceFactory::DeviceTypeId ABMCLOCKMASTER			= 200;
-	static const DeviceFactory::DeviceTypeId HILDEVICE				= 300;
-}
+/*! \class Mti3X0Device
+	\brief The MTi device used for the X-series
+*/
+class Mti3X0Device : public MtiBaseDeviceEx
+{
+public:
+	/*! \brief Constructs a standalone device using a provided communicator
+		\param comm The communicator to use
+		\return The constructed device
+	*/
+	static XsDevice* constructStandalone(Communicator* comm)
+	{
+		return new Mti3X0Device(comm);
+	}
+
+	explicit Mti3X0Device(Communicator* comm);
+
+	//! \brief An empty constructor for a master device
+	explicit Mti3X0Device(XsDevice* master) : MtiBaseDeviceEx(master) {}
+	virtual ~Mti3X0Device();
+
+	uint32_t supportedStatusFlags() const override;
+	XsString shortProductCode() const override;
+
+protected:
+	bool hasIccSupport() const override;
+
+	MtiBaseDevice::BaseFrequencyResult getBaseFrequencyInternal(XsDataIdentifier dataType = XDI_None) const override;
+};
+
+#ifndef XDA_PRIVATE_BUILD
+/*! \class Mti3X0DeviceEx
+	\brief The internal base class for MTi-3X0 series devices
+*/
+struct Mti3X0DeviceEx : public Mti3X0Device
+{
+	//! \copybrief Mti3X0Device::Mti3X0Device
+	explicit Mti3X0DeviceEx(Communicator* comm) : Mti3X0Device(comm) {};
+
+	//! \copybrief Mti3X0Device::Mti3X0Device
+	explicit Mti3X0DeviceEx(XsDevice* master) : Mti3X0Device(master) {};
+};
+#else
+#include "mti3x0deviceex.h"
+#endif
 
 #endif
