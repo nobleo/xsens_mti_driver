@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include "protocolmanager.h"
 #include "iprotocolhandler.h"
@@ -80,8 +80,8 @@
 
 /*! \brief Default constructor
 */
-ProtocolManager::ProtocolManager(Communicator const & communicator)
-: m_communicator(communicator)
+ProtocolManager::ProtocolManager(Communicator const& communicator)
+	: m_communicator(communicator)
 {
 }
 
@@ -117,7 +117,7 @@ MessageLocation ProtocolManager::findMessage(XsProtocolType& type, const XsByteA
 	for (container_type::iterator i = m_protocolHandlers.begin(); i != m_protocolHandlers.end(); ++i)
 	{
 		assert((*i).operator->() != 0);
-		IProtocolHandler const & handler = **i;
+		IProtocolHandler const& handler = **i;
 		XsProtocolType currentProtocolType = static_cast<XsProtocolType>(handler.type());
 		MessageLocation currentMessageLocation = handler.findMessage(type, raw);
 
@@ -134,18 +134,16 @@ MessageLocation ProtocolManager::findMessage(XsProtocolType& type, const XsByteA
 
 			// Stop searching if the location is as good as it gets
 			if (bestMessageLocation.m_startPos == 0)
-			{
 				break;
-			}
 		}
 		else
 		{
 			// No valid location/message produced. Continue searching.
 			// location may still contain useful information
 			if ((currentMessageLocation.m_startPos >= 0 && currentMessageLocation.m_size < 0 &&
-				(!bestMessageLocation.isValid() || bestMessageLocation.m_startPos > currentMessageLocation.m_startPos)) ||
+					(!bestMessageLocation.isValid() || bestMessageLocation.m_startPos > currentMessageLocation.m_startPos)) ||
 				(currentMessageLocation.m_incompletePos >= 0 && currentMessageLocation.m_incompleteSize > 0 &&
-				(!bestMessageLocation.isValid() || bestMessageLocation.m_startPos > currentMessageLocation.m_incompletePos)))
+					(!bestMessageLocation.isValid() || bestMessageLocation.m_startPos > currentMessageLocation.m_incompletePos)))
 			{
 				bestMessageLocation = currentMessageLocation;
 				bestProtocolType = currentProtocolType;
@@ -189,8 +187,10 @@ bool ProtocolManager::remove(XsProtocolType type)
 {
 	bool result = false;
 	container_type::iterator i = m_protocolHandlers.begin();
-	while (i != m_protocolHandlers.end()) {
-		if ((*i)->type() == type) {
+	while (i != m_protocolHandlers.end())
+	{
+		if ((*i)->type() == type)
+		{
 			// Increment the incrementing iterator before removing the pointed to element to
 			// prevent icrementing an invalidated iterator
 			container_type::iterator toErase = i;
@@ -198,9 +198,8 @@ bool ProtocolManager::remove(XsProtocolType type)
 			m_protocolHandlers.erase(toErase);
 			result = true;
 		}
-		else {
+		else
 			++i;
-		}
 	}
 	return result;
 }
@@ -212,10 +211,10 @@ bool ProtocolManager::remove(XsProtocolType type)
 bool ProtocolManager::hasProtocol(XsProtocolType type) const
 {
 	bool result = false;
-	for (container_type::const_iterator i = m_protocolHandlers.begin(); i != m_protocolHandlers.end(); ++i) {
-		if ((*i)->type() == type) {
+	for (container_type::const_iterator i = m_protocolHandlers.begin(); i != m_protocolHandlers.end(); ++i)
+	{
+		if ((*i)->type() == type)
 			result = true;
-		}
 	}
 	return result;
 }
@@ -245,7 +244,7 @@ void ProtocolManager::clear()
 	\param[in] message The message to check
 	\returns True if valid
 */
-bool ProtocolManager::validateMessage(XsMessage const & message) const
+bool ProtocolManager::validateMessage(XsMessage const& message) const
 {
 	return m_communicator.sanityCheck(message);
 }
@@ -258,3 +257,4 @@ int ProtocolManager::likelyMinimumMessageSize() const
 		return 0;
 	return (*m_protocolHandlers.begin())->minimumMessageSize();
 }
+

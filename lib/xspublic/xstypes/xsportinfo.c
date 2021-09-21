@@ -1,71 +1,71 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include "xsportinfo.h"
 #include <ctype.h>
 #include <string.h>	// strlen
-#include <stdlib.h> 	// atoi
+#include <stdlib.h>	// atoi
 
 /*! \class XsPortInfo
 	\brief Contains a descriptor for opening a communication port to an Xsens device.
@@ -106,17 +106,17 @@ int XsPortInfo_portNumber(const struct XsPortInfo* thisPtr)
 	if (XsPortInfo_empty(thisPtr))
 		return 0;
 
-	for (i = 0; i < strlen(thisPtr->m_portName); i++) {
-		if (isdigit(thisPtr->m_portName[i])) {
+	for (i = 0; i < strlen(thisPtr->m_portName); i++)
+	{
+		if (isdigit(thisPtr->m_portName[i]))
 			return atoi(&thisPtr->m_portName[i]);
-		}
 	}
 	return 0;
 }
 
 /*! \relates XsPortInfo
 	\brief Returns true if this port info object contains a USB device
- */
+*/
 int XsPortInfo_isUsb(const struct XsPortInfo* thisPtr)
 {
 #ifdef XSENS_WINDOWS
@@ -127,21 +127,39 @@ int XsPortInfo_isUsb(const struct XsPortInfo* thisPtr)
 }
 
 /*!
- * \relates XsPortInfo
- * \brief Returns true if this port info object contains a network device
- */
+	\relates XsPortInfo
+	\brief Returns true if this port info object contains a bluetooth device
+*/
+int XsPortInfo_isBluetooth(const struct XsPortInfo* thisPtr)
+{
+	return strncmp("BT:", thisPtr->m_portName, 3) == 0;
+}
+
+/*!
+    \relates XsPortInfo
+    \brief Returns true if this port info object contains a network device
+*/
 int XsPortInfo_isNetwork(const struct XsPortInfo* thisPtr)
 {
 	return strncmp("NET:", thisPtr->m_portName, 4) == 0;
 }
 
 /*!
- * \relates XsPortInfo
- * \brief Returns the network service name of this port
- */
+    \relates XsPortInfo
+    \brief Returns the network service name of this port
+*/
 const char* XsPortInfo_networkServiceName(const struct XsPortInfo* thisPtr)
 {
 	return &thisPtr->m_portName[4];
+}
+
+/*!
+	\relates XsPortInfo
+	\brief Returns the bluetooth address
+*/
+const char* XsPortInfo_bluetoothAddress(const struct XsPortInfo* thisPtr)
+{
+	return &thisPtr->m_portName[3];
 }
 
 /*! \relates XsPortInfo
@@ -185,6 +203,7 @@ void XsPortInfo_swap(struct XsPortInfo* a, struct XsPortInfo* b)
 	int i;
 	char c;
 	XsPortLinesOptions pLineOpts;
+	uint16_t u;
 
 	XsBaudRate t = a->m_baudrate;
 	a->m_baudrate = b->m_baudrate;
@@ -202,6 +221,14 @@ void XsPortInfo_swap(struct XsPortInfo* a, struct XsPortInfo* b)
 	pLineOpts = a->m_linesOptions;
 	a->m_linesOptions = b->m_linesOptions;
 	b->m_linesOptions = pLineOpts;
+
+	u = a->m_vid;
+	a->m_vid = b->m_vid;
+	b->m_vid = u;
+
+	u = a->m_pid;
+	a->m_pid = b->m_pid;
+	b->m_pid = u;
 }
 
 /*! @} */

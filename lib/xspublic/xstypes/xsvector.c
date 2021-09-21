@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include "xsvector.h"
 #include <stdlib.h>
@@ -75,6 +75,10 @@
 
 #define realSwap(a,b) { XsReal t = *a; *a = *b; *b = t; }
 
+#ifdef __ICCARM__
+	#pragma diag_suppress=Pa039
+#endif
+
 /*! \class XsVector
 	\brief A class that represents a vector of real numbers
 */
@@ -86,7 +90,7 @@
 //! \relates XsVector \brief Initialize the %XsVector to refer to the supplied buffer
 void XsVector_ref(XsVector* thisPtr, XsSize sz, XsReal* buffer, XsDataFlags flags)
 {
-	assert(sz==0 || buffer != 0);
+	assert(sz == 0 || buffer != 0);
 	*((XsReal**) &thisPtr->m_data) = buffer;
 	*((XsSize*) &thisPtr->m_size) = sz;
 	*((XsSize*) &thisPtr->m_flags) = flags;
@@ -98,7 +102,7 @@ void XsVector_construct(XsVector* thisPtr, XsSize sz, const XsReal* src)
 	if (sz)
 	{
 		// init to size
-		XsReal* data = (XsReal*) xsMathMalloc(sz*sizeof(XsReal));
+		XsReal* data = (XsReal*) xsMathMalloc(sz * sizeof(XsReal));
 		assert(data);
 		*((XsReal**) &thisPtr->m_data) = data;
 		XsVector_incAllocCount();
@@ -108,7 +112,7 @@ void XsVector_construct(XsVector* thisPtr, XsSize sz, const XsReal* src)
 	*((XsSize*) &thisPtr->m_flags) = XSDF_Managed;
 	*((XsSize*) &thisPtr->m_size) = sz;
 	if (src && sz)
-		memcpy(thisPtr->m_data, src, sz*sizeof(XsReal));
+		memcpy(thisPtr->m_data, src, sz * sizeof(XsReal));
 }
 
 /*! \relates XsVector
@@ -118,7 +122,7 @@ void XsVector_construct(XsVector* thisPtr, XsSize sz, const XsReal* src)
 */
 void XsVector_assign(XsVector* thisPtr, XsSize sz, const XsReal* src)
 {
-	if (thisPtr->m_flags == XSDF_FixedSize)
+	if (thisPtr->m_flags & XSDF_FixedSize)
 	{
 		if (sz == 0)
 		{
@@ -135,7 +139,7 @@ void XsVector_assign(XsVector* thisPtr, XsSize sz, const XsReal* src)
 		if (sz)
 		{
 			// init to size
-			XsReal* data = (XsReal*) xsMathMalloc(sz*sizeof(XsReal));
+			XsReal* data = (XsReal*) xsMathMalloc(sz * sizeof(XsReal));
 			assert(data);
 			*((XsReal**) &thisPtr->m_data) = data;
 			*((XsSize*) &thisPtr->m_flags) = XSDF_Managed;
@@ -144,7 +148,7 @@ void XsVector_assign(XsVector* thisPtr, XsSize sz, const XsReal* src)
 	}
 	*((XsSize*) &thisPtr->m_size) = sz;
 	if (src && sz)
-		memcpy(thisPtr->m_data, src, sz*sizeof(XsReal));
+		memcpy(thisPtr->m_data, src, sz * sizeof(XsReal));
 }
 
 //! \relates XsVector \brief Release and clear the contents of the vector
@@ -188,8 +192,8 @@ XsReal XsVector_dotProduct(const XsVector* a, const XsVector* b)
 	XsReal r = XsMath_zero;
 	assert(a->m_size == b->m_size);
 
-	for (i = a->m_size; i--; )
-		r += a->m_data[i]*b->m_data[i];
+	for (i = a->m_size; i--;)
+		r += a->m_data[i] * b->m_data[i];
 	return r;
 }
 
@@ -270,7 +274,7 @@ void XsVector_angularVelocityFromQuaternion(XsVector* thisPtr, XsReal deltaT, co
 
 	XsVector_assign(thisPtr, 3, &quat->m_data[1]);
 	a = XsVector_cartesianLength(thisPtr);
-	XsVector_multiplyScalar(thisPtr, (a > XsMath_tinyValue) ? (XsMath_two*asin(a)/(a*deltaT)) : (XsMath_two/deltaT), thisPtr);
+	XsVector_multiplyScalar(thisPtr, (a > XsMath_tinyValue) ? (XsMath_two * asin(a) / (a * deltaT)) : (XsMath_two / deltaT), thisPtr);
 }
 
 /*! \relates XsVector \brief Swap the contents of \a a and \a b
@@ -282,7 +286,7 @@ void XsVector_angularVelocityFromQuaternion(XsVector* thisPtr, XsReal deltaT, co
 void XsVector_swap(XsVector* a, XsVector* b)
 {
 #ifdef __ICCARM__
-	#pragma diag_suppress=Pe370
+#pragma diag_suppress=Pe370
 #endif
 	XSLISTSWAP3(XsReal, XsVector, realSwap)
 }
@@ -301,9 +305,11 @@ int XsVector_equal(const struct XsVector* a, const struct XsVector* b)
 		return 0;
 	if (XsVector_empty(a) && XsVector_empty(b))
 		return 1;
+	if (XsVector_empty(a) || XsVector_empty(b))
+		return 0;
 	if (a->m_size != b->m_size)
 		return 0;
-	return memcmp(a->m_data, b->m_data, a->m_size*sizeof(XsReal)) == 0;	//lint !e2499 memcmp is a perfect comparison here
+	return memcmp(a->m_data, b->m_data, a->m_size * sizeof(XsReal)) == 0;	//lint !e2499 memcmp is a perfect comparison here
 }
 
 /*! \relates XsVector
@@ -323,6 +329,8 @@ int XsVector_compare(const struct XsVector* thisPtr, const struct XsVector* that
 		return 0;
 	if (XsVector_empty(thisPtr) && XsVector_empty(thatPtr))
 		return 1;
+	if (XsVector_empty(thisPtr) || XsVector_empty(thatPtr))
+		return 0;
 	if (thisPtr->m_size != thatPtr->m_size)
 		return 0;
 

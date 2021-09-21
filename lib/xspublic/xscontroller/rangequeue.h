@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef RANGE_QUEUE_H
 #define RANGE_QUEUE_H
@@ -127,22 +127,16 @@ public:
 
 		for (auto r = m_queue.rbegin(); r != m_queue.rend(); ++r)
 		{
-			if ( (index > r->m_end) || (index < r->m_start) )
+			if ((index > r->m_end) || (index < r->m_start))
 				continue;
 
 			--m_count;
 			if (r->m_start == r->m_end)
-			{
 				m_queue.erase(--(r.base()));
-			}
 			else if (r->m_start == index)
-			{
 				r->m_start++;
-			}
 			else if (r->m_end == index)
-			{
 				r->m_end--;
-			}
 			else
 			{
 				Range split(r->m_start, index - 1);
@@ -229,16 +223,16 @@ public:
 	}
 
 	/*!	\returns a range limit.
-	 *	\param index: start or end limit to return.
-	 *
-	 *	Concatenating the start and end points for each range will generate a list of limits,
-	 *	this function gives access to such a list.
-	 *	For example:
-	 *	- index 0: start of the first range
-	 *	- index 1: end of the first range
-	 *	- index 2: start of the second range
-	 *	- ...
-	 */
+		\param index: start or end limit to return.
+
+		Concatenating the start and end points for each range will generate a list of limits,
+		this function gives access to such a list.
+		For example:
+		- index 0: start of the first range
+		- index 1: end of the first range
+		- index 2: start of the second range
+		- ...
+	*/
 	const T operator[](std::size_t index) const
 	{
 		xsens::Lock locky(&m_mutex);
@@ -267,7 +261,7 @@ public:
 		xsens::Lock locky(&m_mutex);
 		for (auto i = m_queue.begin(); i != m_queue.end(); ++i)
 		{
-			if ( (index >= i->m_start) && (index <= i->m_end) )
+			if ((index >= i->m_start) && (index <= i->m_end))
 				return true;
 		}
 		return false;
@@ -287,9 +281,7 @@ public:
 		xsens::Lock locky(&m_mutex);
 		m_count = 0;
 		for (auto i = m_queue.begin(); i != m_queue.end(); ++i)
-		{
 			m_count += (i->m_end - i->m_start) + 1;
-		}
 		return m_count;
 	}
 
@@ -304,14 +296,14 @@ public:
 	*/
 	static const T illegalIndex()
 	{
-		return (T)-1;
+		return (T) - 1;
 	}
 
 	/*!
-	 *	\brief Copy all ranges within the given limits [start, end].
-	 *	If the limit falls in a certain range, that range is split and included
-	 *	from the start until the limit.
-	 */
+		\brief Copy all ranges within the given limits [start, end].
+		If the limit falls in a certain range, that range is split and included
+		from the start until the limit.
+	*/
 	void copy(RangeQueue<T>& destination, T start, T end)
 	{
 		xsens::Lock locky(&m_mutex);
@@ -319,13 +311,9 @@ public:
 		for (auto i = m_queue.begin(); i != m_queue.end(); ++i)
 		{
 			if ((i->m_start >= start && start <= i->m_end) && (i->m_start <= end))
-			{
 				destination.pushBack(i->m_start, std::min<T>(i->m_end, end));
-			}
 			else if (i->m_start < start && i->m_start < end)
-			{
 				destination.pushBack(start, std::min<T>(i->m_end, end));
-			}
 		}
 	}
 

@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef XSRAWGNSSPVTDATA_H
 #define XSRAWGNSSPVTDATA_H
@@ -78,10 +78,56 @@
 	#include <cstring>
 #endif
 
-// The valid flag from the PVT package has the following fields, x is the valid flag.
+// The valid flag from the PVT package has the following fields, x is the valid flag:
 #define GNSS_PVT_VALID_DATE(x)		(0x01 & x)	// UTC date is valid
 #define GNSS_PVT_VALID_TIME(x)		(0x02 & x)	// UTC time of day is valid
 #define GNSS_PVT_VALID_RESOLVE(x)	(0x04 & x)	// UTC time of day has been fully resolved
+
+// The flag from the PVT package has the following fields, x is the valid flag:
+#define GNSS_PVT_FLAGS_GNSS_FIX(x)				((0x03 << 0) & x)
+#define GNSS_PVT_FLAGS_POWER_SAVE_MODE_STATE(x)	((0x07 << 2) & x)
+#define GNSS_PVT_FLAGS_HEADING_VEHICLE_VALID(x)	((0x01 << 5) & x)
+#define GNSS_PVT_FLAGS_CARRIER_SOLUTION(x)		((0x03 << 6) & x)
+
+#define GNSS_PVT_FLAGS_GNSS_FIX_NONE			(0x00)
+#define GNSS_PVT_FLAGS_GNSS_FIX_SINGLE			(0x01)
+#define GNSS_PVT_FLAGS_GNSS_FIX_DIFFERENTIAL	(0x03)
+
+#define GNSS_PVT_FLAGS_CARRIER_SOLUTION_NONE		(0x00 << 6)
+#define GNSS_PVT_FLAGS_CARRIER_SOLUTION_FLOATING	(0x01 << 6)
+#define GNSS_PVT_FLAGS_CARRIER_SOLUTION_FIXED		(0x02 << 6)
+
+// Default accuracy deviation when not provided by GNSS receiver
+#define GNSS_ACCURACY_DEFAULT_DEVIATION			(10000000)
+
+/*!	\addtogroup enums Global enumerations
+	@{
+*/
+
+/*! \enum XsPvtDataUtcFlags
+ *  \brief Define the validity flags for the UTC time
+*/
+enum XsPvtDataUtcFlags
+{
+	XPDUF_ValidDate     = 0x01,
+	XPDUF_ValidTime     = 0x02,
+	XPDUF_FullyResolved = 0x04,
+	XPDUF_ValidMag      = 0x08
+};
+
+/*! \enum XsPvtDataQualityIndicator
+ *  \brief Defines the quality indicator flags of the GNSS Fix type
+*/
+enum XsPvtDataQualityIndicator
+{
+	XPDQI_NoFix             = 0,
+	XPDQI_DeadReckiningOnly = 1,
+	XPDQI_2DFix             = 2,
+	XPDQI_3DFix             = 3,
+	XPDQI_GnssAndDeadReck   = 4,
+	XPDQI_TimeOnlyFix       = 5
+};
+/*! @} */
 
 /*! \brief A container for GNSS Position Velocity and Time data
 */
@@ -113,8 +159,9 @@ struct XsRawGnssPvtData
 	uint8_t		m_flags;	/*!< Fix Status Flags
 								bit(0) = Set if there is a valid fix (i.e. within DOP & accuracy masks)
 								bit(1) = Set if differential corrections were applied
-								bit(2..4) = Reserved (Ignore)
+								bit(4..2) = Power save mode state
 								bit(5) = Set if heading of vehicle is valid
+								bit(7..6) = Carrier phase range solution status: 0 = none, 1 = floating, 2 = fixed
 */
 
 	uint8_t		m_numSv;	//!< Number of satellites used in Nav Solution

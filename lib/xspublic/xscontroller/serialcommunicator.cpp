@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include "serialcommunicator.h"
 #include <xstypes/xsbusid.h>
@@ -85,8 +85,8 @@
 */
 SerialCommunicator::SerialCommunicator()
 	: m_thread(*this, *this)
-	, m_firmwareRevision(0,0,0)
-	, m_hardwareRevision(0,0)
+	, m_firmwareRevision(0, 0, 0)
+	, m_hardwareRevision(0, 0)
 {
 	messageExtractor().clearBuffer();
 	startPollThread();
@@ -177,7 +177,7 @@ XsResultValue SerialCommunicator::gotoConfig(bool detectRs485)
 
 /*! \brief Write raw data to the open COM or USB port
 */
-XsResultValue SerialCommunicator::writeRawData(const XsByteArray &data)
+XsResultValue SerialCommunicator::writeRawData(const XsByteArray& data)
 {
 	if (!isPortOpen())
 		return XRV_NOPORTOPEN;
@@ -225,7 +225,7 @@ void SerialCommunicator::closePort()
 }
 
 /*! \returns whether the communicator has an open COM or USB port
-\*/
+    \*/
 bool SerialCommunicator::isPortOpen() const
 {
 	return m_streamInterface && m_streamInterface->isOpen();
@@ -240,7 +240,7 @@ XsPortInfo SerialCommunicator::portInfo() const
 
 /*! \brief Open a serial port and return the main device connected to it
 */
-bool SerialCommunicator::openPort(const XsPortInfo &portInfo, OpenPortStage stage, bool detectRs485)
+bool SerialCommunicator::openPort(const XsPortInfo& portInfo, OpenPortStage stage, bool detectRs485)
 {
 	JLDEBUGG("Opening " << portInfo << " stage " << stage << " configtimeout " << gotoConfigTimeout());
 	XSEXITLOGN(gJournal);
@@ -310,9 +310,7 @@ bool SerialCommunicator::openPort(const XsPortInfo &portInfo, OpenPortStage stag
 		return true;
 	}
 	else
-	{
 		return false;
-	}
 
 }
 
@@ -375,7 +373,7 @@ void SerialCommunicator::setDoGotoConfig(bool doit)
 	\param other The communicator of an other device
 	\note This is true if the USB hub matches.
 */
-bool SerialCommunicator::isDockedAt(Communicator *other) const
+bool SerialCommunicator::isDockedAt(Communicator* other) const
 {
 	XsUsbHubInfo thisHub = XsScanner::scanUsbHub(XsPortInfo(portInfo().portName()));
 	XsUsbHubInfo otherHub = XsScanner::scanUsbHub(XsPortInfo(other->portInfo().portName()));
@@ -403,17 +401,17 @@ XsResultValue SerialCommunicator::readDataToBuffer(XsByteArray& raw)
 
 	switch (res)
 	{
-	// all intended fall-throughs
-	case XRV_UNEXPECTED_DISCONNECT:
-		if (masterDevice() != nullptr)
-			masterDevice()->onConnectionLost();
+		// all intended fall-throughs
+		case XRV_UNEXPECTED_DISCONNECT:
+			if (masterDevice() != nullptr)
+				masterDevice()->onConnectionLost();
 		//lint -fallthrough
-	case XRV_NOFILEORPORTOPEN:
-		closePort();
-		break;
+		case XRV_NOFILEORPORTOPEN:
+			closePort();
+			break;
 
-	default:
-		break;
+		default:
+			break;
 	}
 
 	return res;
@@ -423,7 +421,7 @@ XsResultValue SerialCommunicator::readDataToBuffer(XsByteArray& raw)
 	\note Overridden here for implementation of DataParser::handleMessage
 	\param msg The XsMessage to handle
 */
-void SerialCommunicator::handleMessage(const XsMessage &msg)
+void SerialCommunicator::handleMessage(const XsMessage& msg)
 {
 	DeviceCommunicator::handleMessage(msg);
 }
@@ -434,7 +432,7 @@ void SerialCommunicator::handleMessage(const XsMessage &msg)
 	\details This function will read all present messages in the read buffer. In order for this function
 	to work, you need to call readDataToBuffer() first.
 	\returns The messages that were read.
- */
+*/
 XsResultValue SerialCommunicator::processBufferedData(const XsByteArray& rawIn, std::deque<XsMessage>& messages)
 {
 	return extractMessages(rawIn, messages);

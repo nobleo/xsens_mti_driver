@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include <xstypes/xsdatapacket.h>
 #include "packetstamper.h"
@@ -88,7 +88,7 @@ PacketStamper::PacketStamper()
 //! \brief Reset the Time Of Sampling estimation parameters
 void PacketStamper::resetTosEstimation()
 {
-	m_latest = DataPair{-1,0};
+	m_latest = DataPair{-1, 0};
 	m_rejectionCountdown = 0;
 	m_dataPoints.clear();
 	m_rate = 0;
@@ -157,7 +157,7 @@ int64_t PacketStamper::stampPacket(XsDataPacket& pack, XsDataPacket const& highe
 	else
 		newCounter = lastCounter + 1;
 
-//	JLDEBUGG("XsensDeviceAPI", "%s [%08x] old = %I64d new = %I64d diff = %I64d", __FUNCTION__, did, lastCounter, newCounter, (newCounter-lastCounter));
+	//	JLDEBUGG("XsensDeviceAPI", "%s [%08x] old = %I64d new = %I64d diff = %I64d", __FUNCTION__, did, lastCounter, newCounter, (newCounter-lastCounter));
 
 	pack.setPacketId(newCounter);
 	estimateTos(pack);
@@ -179,9 +179,9 @@ int64_t PacketStamper::calculateLargeSampleTime(int64_t frameTime, int64_t lastT
 
 	int64_t low = lastTime % 864000000;
 	int64_t dt = frameTime - low;
-	if (dt < (-864000000/2))
+	if (dt < (-864000000 / 2))
 		return lastTime + dt + 864000000;	// positive wraparound
-	if (dt < (864000000/2))
+	if (dt < (864000000 / 2))
 		return lastTime + dt;				// normal increment
 
 	return lastTime + dt - 864000000;		// negative wraparound
@@ -225,8 +225,8 @@ void PacketStamper::estimateClockParameters()
 	{
 		double dpid = d.m_pid - avgPid;
 		double dtoa = d.m_toa - avgToa;
-		fracTop += dpid*dtoa;
-		fracBot += dpid*dpid;
+		fracTop += dpid * dtoa;
+		fracBot += dpid * dpid;
 	}
 	m_rate = fracTop / fracBot;
 	m_toa0 = avgToa - m_rate * avgPid;
@@ -288,7 +288,7 @@ int64_t PacketStamper::estimateTosInternal(int64_t pid, int64_t toa)
 		if (m_dataPoints.empty())
 		{
 			m_linearize = DataPair{pid, toa};
-			m_dataPoints.push_back(DataPair{0,0});
+			m_dataPoints.push_back(DataPair{0, 0});
 			m_toa0 = 0;
 			m_rate = 0;
 			m_rejectionCountdown = 0;
@@ -298,7 +298,7 @@ int64_t PacketStamper::estimateTosInternal(int64_t pid, int64_t toa)
 			DataPair last = {pid - m_linearize.m_pid, toa - m_linearize.m_toa};
 			auto first = *m_dataPoints.begin();
 			m_toa0 = 0;
-			m_rate = (double) (last.m_toa - first.m_toa) / (double) (last.m_pid - first.m_pid);
+			m_rate = (double)(last.m_toa - first.m_toa) / (double)(last.m_pid - first.m_pid);
 			m_dataPoints.push_back(last);
 		}
 		m_latest = DataPair{pid, toa};	// non-linearized values!
@@ -314,7 +314,7 @@ int64_t PacketStamper::estimateTosInternal(int64_t pid, int64_t toa)
 			if (enough)
 			{
 				double toaPred = (pid - m_linearize.m_pid) * m_rate + m_toa0;
-				if ((double) (toa - m_linearize.m_toa) - toaPred >= 2.0*m_rate)
+				if ((double)(toa - m_linearize.m_toa) - toaPred >= 2.0 * m_rate)
 				{
 					// ignore this point, it doesn't match known information well enough
 					// also ignore the next few points as they're likely also not very reliable
@@ -331,7 +331,7 @@ int64_t PacketStamper::estimateTosInternal(int64_t pid, int64_t toa)
 			// add data point to list
 			m_dataPoints.push_back(DataPair {pid - m_linearize.m_pid, toa - m_linearize.m_toa});
 
-			/* filter list, we remove any points that can't define the rate because they're above the
+			/*  filter list, we remove any points that can't define the rate because they're above the
 				toa line spanned by the neighbouring points
 			*/
 			if (enough)
@@ -341,7 +341,7 @@ int64_t PacketStamper::estimateTosInternal(int64_t pid, int64_t toa)
 				auto it = next++;
 				while (next != m_dataPoints.end())
 				{
-					double rate = (double) (next->m_toa - prev->m_toa) / (double) (next->m_pid - prev->m_pid);
+					double rate = (double)(next->m_toa - prev->m_toa) / (double)(next->m_pid - prev->m_pid);
 					double itoa = (it->m_pid - prev->m_pid) * rate + prev->m_toa;
 					if ((double) it->m_toa >= itoa)
 					{

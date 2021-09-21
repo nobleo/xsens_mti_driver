@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef XSPORTINFO_H
 #define XSPORTINFO_H
@@ -80,17 +80,19 @@ extern "C" {
 #endif
 
 #ifndef __cplusplus
-	typedef struct XsPortInfo XsPortInfo;
+typedef struct XsPortInfo XsPortInfo;
 #else
-	struct XsPortInfo;
+struct XsPortInfo;
 #endif
 
 XSTYPES_DLL_API void XsPortInfo_clear(XsPortInfo* thisPtr);
 XSTYPES_DLL_API int XsPortInfo_empty(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API int XsPortInfo_portNumber(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API int XsPortInfo_isUsb(XsPortInfo const* thisPtr);
+XSTYPES_DLL_API int XsPortInfo_isBluetooth(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API int XsPortInfo_isNetwork(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API const char* XsPortInfo_networkServiceName(XsPortInfo const* thisPtr);
+XSTYPES_DLL_API const char* XsPortInfo_bluetoothAddress(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API int XsPortInfo_usbBus(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API int XsPortInfo_usbAddress(XsPortInfo const* thisPtr);
 XSTYPES_DLL_API void XsPortInfo_swap(XsPortInfo* a, struct XsPortInfo* b);
@@ -100,8 +102,8 @@ XSTYPES_DLL_API void XsPortInfo_swap(XsPortInfo* a, struct XsPortInfo* b);
 #endif
 
 #if defined(_MSC_VER)
-#pragma warning(push)
-#pragma warning(disable : 4996)
+	#pragma warning(push)
+	#pragma warning(disable : 4996)
 #endif
 
 typedef enum XsPortLinesOptions
@@ -123,7 +125,8 @@ typedef enum XsPortLinesOptions
 	XPLO_RtsCtsFlowControl = (1 << 6)
 } XsPortLinesOptions;
 
-struct XsPortInfo {
+struct XsPortInfo
+{
 #ifdef __cplusplus
 	/*! \brief Default constructor, creates an empty port info object */
 	XsPortInfo()
@@ -133,7 +136,7 @@ struct XsPortInfo {
 		, m_vid(0)
 		, m_pid(0)
 	{
-		m_portName[0] = '\0';
+		memset(m_portName, '\0', 256);
 	}
 
 	/*! \brief Named constructor, initializes the object to the supplied \a portname and optional \a baudRate
@@ -148,10 +151,9 @@ struct XsPortInfo {
 		, m_vid(0)
 		, m_pid(0)
 	{
+		memset(m_portName, '\0', 256);
 		if (portname.size() < 255)
 			strcpy(m_portName, portname.c_str());
-		else
-			m_portName[0] = '\0';
 	}
 
 #ifndef XSENS_NO_PORT_NUMBERS
@@ -168,6 +170,7 @@ struct XsPortInfo {
 		, m_vid(0)
 		, m_pid(0)
 	{
+		memset(m_portName, 0, 256);
 		sprintf(m_portName, "COM%d", portNr);
 	}
 #endif
@@ -185,16 +188,28 @@ struct XsPortInfo {
 	}
 
 	/*! \brief greater than operator, used for sorting the list. */
-	inline bool operator > (const XsPortInfo& p) const { return strcmp(m_portName, p.m_portName) > 0; }
+	inline bool operator > (const XsPortInfo& p) const
+	{
+		return strcmp(m_portName, p.m_portName) > 0;
+	}
 
 	/*! \brief less than operator, used for sorting the list. */
-	inline bool operator < (const XsPortInfo& p) const { return strcmp(m_portName, p.m_portName) < 0; }
+	inline bool operator < (const XsPortInfo& p) const
+	{
+		return strcmp(m_portName, p.m_portName) < 0;
+	}
 
 	/*! \brief equality operator, used for finding items in a list. */
-	inline bool operator == (const XsPortInfo& p) const { return strcmp(m_portName, p.m_portName) == 0; }
+	inline bool operator == (const XsPortInfo& p) const
+	{
+		return strcmp(m_portName, p.m_portName) == 0;
+	}
 
 	/*! \brief equality operator, used for finding items in a list. */
-	inline bool operator == (const char *port) const { return strcmp(m_portName, port) == 0; }
+	inline bool operator == (const char* port) const
+	{
+		return strcmp(m_portName, port) == 0;
+	}
 
 	/*! \copydoc XsPortInfo_portNumber */
 	inline int portNumber() const
@@ -229,6 +244,12 @@ struct XsPortInfo {
 		return XsPortInfo_isUsb(this) != 0;
 	}
 
+	/*! \brief \copybrief XsPortInfo_isBluetooth */
+	inline bool isBluetooth() const
+	{
+		return XsPortInfo_isBluetooth(this) != 0;
+	}
+
 	/*! \brief \copybrief XsPortInfo_isNetwork */
 	inline bool isNetwork() const
 	{
@@ -239,6 +260,12 @@ struct XsPortInfo {
 	inline XsString networkServiceName() const
 	{
 		return XsString(XsPortInfo_networkServiceName(this));
+	}
+
+	/*! \copydoc XsPortInfo_bluetoothAddress */
+	inline XsString bluetoothAddress() const
+	{
+		return XsString(XsPortInfo_bluetoothAddress(this));
 	}
 
 	/*! \copydoc XsPortInfo_usbBus */
@@ -322,25 +349,25 @@ private:
 };
 
 #if defined(_MSC_VER)
-#pragma warning(pop)
+	#pragma warning(pop)
 #endif
 
 #if defined(__cplusplus) && !defined(XSENS_NO_STL)
 #include <ostream>
 namespace std
 {
-	template<typename _CharT, typename _Traits>
-	basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& o, XsPortInfo const& xpi)
-	{
-		if (xpi.isUsb())
-			o << "usb ";
-		o << "port " << xpi.portName();
-		if (xpi.baudrate() != XBR_Invalid)
-			o << " at " << xpi.baudrate() << " bps";
-		if (xpi.deviceId() != 0)
-			o << " (" << xpi.deviceId() << ")";
-		return o;
-	}
+template<typename _CharT, typename _Traits>
+basic_ostream<_CharT, _Traits>& operator<<(basic_ostream<_CharT, _Traits>& o, XsPortInfo const& xpi)
+{
+	if (xpi.isUsb())
+		o << "usb ";
+	o << "port " << xpi.portName();
+	if (xpi.baudrate() != XBR_Invalid)
+		o << " at " << xpi.baudrate() << " bps";
+	if (xpi.deviceId() != 0)
+		o << " (" << xpi.deviceId() << ")";
+	return o;
+}
 }
 
 #endif
