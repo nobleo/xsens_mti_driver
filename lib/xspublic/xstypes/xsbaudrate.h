@@ -89,11 +89,12 @@ enum XsBaudRate
 	XBR_Invalid					= 0,			//!< Not a valid baud rate
 	XBR_4800					= CBR_4800,		//!< 4k8 (4800 bps)
 	XBR_9600					= CBR_9600,		//!< 9k6 (9600 bps)
-	//	XBR_14k4					= CBR_14400,
+	XBR_14k4					= CBR_14400,	//!< 14k4 (14400 bps)
 	XBR_19k2					= CBR_19200,	//!< 19k2 (19200 bps)
-	//	XBR_28k8					= 28800,
+	XBR_28k8					= 28800,		//!< 28k8 (28800 bps)
 	XBR_38k4					= CBR_38400,	//!< 38k4 (38400 bps)
 	XBR_57k6					= CBR_57600,	//!< 57k6 (57600 bps)
+	XBR_76k8					= 76800,		//!< 76k8 (76800 bps)
 	XBR_115k2					= CBR_115200,	//!< 115k2 (115200 bps)
 	XBR_230k4					= 230400,		//!< 230k4 (230400 bps)
 	XBR_460k8					= 460800,		//!< 460k8 (460800 bps)
@@ -126,11 +127,12 @@ enum XSNOCOMEXPORT XsBaudRate
 
 	XBR_4800					= B4800,		//!< 4k8 (4800 bps)
 	XBR_9600					= B9600,		//!< 9k6 (9600 bps)
-	//	XBR_14k4					= B14400,
+	XBR_14k4					= 0,			//!< 14k4 is set to 0 on purpose
 	XBR_19k2					= B19200,		//!< 19k2 (19200 bps)
-	//	XBR_28k8					= B28800,
+	XBR_28k8					= 0,			//!< 28k8 is set to 0 on purpose
 	XBR_38k4					= B38400,		//!< 38k4 (38400 bps)
 	XBR_57k6					= B57600,		//!< 57k6 (57600 bps)
+	XBR_76k8					= 0,			//!< 76k8 is set to 0 on purpose
 	XBR_115k2					= B115200,		//!< 115k2 (115200 bps)
 	XBR_230k4					= B230400,		//!< 230k4 (230400 bps)
 	XBR_460k8					= B460800,		//!< 460k8 (460800 bps)

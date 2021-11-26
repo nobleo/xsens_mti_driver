@@ -107,6 +107,7 @@ public:
 		\returns The value type
 	*/
 	virtual value_type add(IProtocolHandler* handler);
+	virtual value_type find(XsProtocolType type);
 	virtual bool remove(XsProtocolType type);
 	virtual bool hasProtocol(XsProtocolType type) const;
 	virtual void clear();

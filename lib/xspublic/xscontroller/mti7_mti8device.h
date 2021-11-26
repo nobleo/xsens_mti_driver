@@ -62,32 +62,35 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //  
 
-#ifndef XSMTI7DEVICE_H
-#define XSMTI7DEVICE_H
+#ifndef XSMTI7MTI8DEVICE_H
+#define XSMTI7MTI8DEVICE_H
 
 #include "mtibasedevice.h"
-
-/*! \brief The MTi device used for the 7-series
+struct XsVector;
+/*! \brief A class used for the MTi-7-and MTi-8 types
 */
-class Mti7Device : public MtiBaseDeviceEx
+class MTi7_MTi8Device : public MtiBaseDeviceEx
 {
 public:
 	//! \copybrief MtiXDevice::constructStandalone
 	static XsDevice* constructStandalone(Communicator* comm)
 	{
-		return new Mti7Device(comm);
+		return new MTi7_MTi8Device(comm);
 	}
 
 	//! \brief An empty constructor for a device
-	explicit Mti7Device(Communicator* comm);
+	explicit MTi7_MTi8Device(Communicator* comm);
 
 	//! \brief An empty constructor for a master device
-	explicit Mti7Device(XsDevice* master);
-	virtual ~Mti7Device();
+	explicit MTi7_MTi8Device(XsDevice* master);
+	virtual ~MTi7_MTi8Device();
 
 	bool hasIccSupport() const override;
 	uint32_t supportedStatusFlags() const override;
 	XsString shortProductCode() const override;
+
+	bool setGnssLeverArm(const XsVector& arm) override;
+	XsVector gnssLeverArm() const override;
 
 protected:
 	BaseFrequencyResult getBaseFrequencyInternal(XsDataIdentifier dataType = XDI_None) const override;
@@ -95,19 +98,19 @@ protected:
 };
 
 #ifndef XDA_PRIVATE_BUILD
-/*! \class Mti7DeviceEx
-	\brief The internal base class for MTi-7 series devices
+/*! \class Mti7_MTi8DeviceEx
+	\brief The internal base class for MTi-7 and MTi-8 devices
 */
-struct Mti7DeviceEx : public Mti7Device
+struct Mti7_MTi8DeviceEx : public MTi7_MTi8Device
 {
 	//! \copybrief MtigDevice::MtigDevice
-	explicit Mti7DeviceEx(Communicator* comm) : Mti7Device(comm) {};
+	explicit Mti7_MTi8DeviceEx(Communicator* comm) : MTi7_MTi8Device(comm) {};
 
 	//! \copybrief MtigDevice::MtigDevice
-	explicit Mti7DeviceEx(XsDevice* master) : Mti7Device(master) {};
+	explicit Mti7_MTi8DeviceEx(XsDevice* master) : MTi7_MTi8Device(master) {};
 };
 #else
-#include "mti7deviceex.h"
+#include "mti7_mti8deviceex.h"
 #endif
 
 #endif

@@ -121,35 +121,25 @@ MessageLocation ProtocolManager::findMessage(XsProtocolType& type, const XsByteA
 		XsProtocolType currentProtocolType = static_cast<XsProtocolType>(handler.type());
 		MessageLocation currentMessageLocation = handler.findMessage(type, raw);
 
-		if (currentMessageLocation.isValid())
-		{
-			// Message is valid
-			if (!bestMessageLocation.isValid() || (currentMessageLocation.m_startPos < bestMessageLocation.m_startPos))
-			{
-				// Message is a better match
-				bestMessageLocation = currentMessageLocation;
-				bestProtocolType = currentProtocolType;
-				bestHandlerIter = i;
-			}
+		int currentPosition = currentMessageLocation.m_incompletePos >= 0 ? currentMessageLocation.m_incompletePos : currentMessageLocation.m_startPos;
+		if (currentPosition < 0)
+			continue;
 
-			// Stop searching if the location is as good as it gets
-			if (bestMessageLocation.m_startPos == 0)
-				break;
-		}
-		else
+		int bestPosition = bestMessageLocation.m_incompletePos >= 0 ? bestMessageLocation.m_incompletePos : bestMessageLocation.m_startPos;
+		if (   (bestPosition < 0)
+			|| (currentPosition < bestPosition)
+			|| (currentPosition == bestPosition && currentMessageLocation.m_startPos >= 0 && (bestMessageLocation.m_startPos < 0 || currentMessageLocation.m_startPos < bestMessageLocation.m_startPos))
+		   )
 		{
-			// No valid location/message produced. Continue searching.
-			// location may still contain useful information
-			if ((currentMessageLocation.m_startPos >= 0 && currentMessageLocation.m_size < 0 &&
-					(!bestMessageLocation.isValid() || bestMessageLocation.m_startPos > currentMessageLocation.m_startPos)) ||
-				(currentMessageLocation.m_incompletePos >= 0 && currentMessageLocation.m_incompleteSize > 0 &&
-					(!bestMessageLocation.isValid() || bestMessageLocation.m_startPos > currentMessageLocation.m_incompletePos)))
-			{
-				bestMessageLocation = currentMessageLocation;
-				bestProtocolType = currentProtocolType;
-			}
-
+			// Message is a better match
+			bestMessageLocation = currentMessageLocation;
+			bestProtocolType = currentProtocolType;
+			bestHandlerIter = i;
 		}
+
+		// Stop searching if the location is as good as it gets
+		if (bestMessageLocation.m_startPos == 0)
+			break;
 	}
 
 	// Move the best handler to the front of the list to speed up future searches
@@ -202,6 +192,21 @@ bool ProtocolManager::remove(XsProtocolType type)
 			++i;
 	}
 	return result;
+}
+
+
+/*! \brief Searches the registered protocol handlers for a handler that matches the given protocol type and returns that handler if present
+*	\param type : The protocol type to search for
+*	\returns : (shared) pointer to the matching handler, an invalid shared pointer if there is no matching protocol
+*/
+ProtocolManager::value_type ProtocolManager::find(XsProtocolType type)
+{
+	for (auto i : m_protocolHandlers)
+	{
+		if (i->type() == type)
+			return i;
+	}
+	return value_type();
 }
 
 

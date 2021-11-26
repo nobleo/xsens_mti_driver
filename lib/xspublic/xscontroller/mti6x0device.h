@@ -101,6 +101,9 @@ public:
 	bool setGnssLeverArm(const XsVector& arm) override;
 	XsVector gnssLeverArm() const override;
 
+	XsUbloxGnssPlatform ubloxGnssPlatform() const override;
+	bool setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform) override;
+
 protected:
 	uint8_t syncLine(const XsSyncSetting& setting) const override;
 	bool hasIccSupport() const override;

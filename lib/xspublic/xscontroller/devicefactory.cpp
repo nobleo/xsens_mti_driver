@@ -72,7 +72,7 @@
 #include "mtix0device.h"
 #include "mtix00device.h"
 #include "mtigdevice.h"
-#include "mti7device.h"
+#include "mti7_mti8device.h"
 #include "mti3x0device.h"
 #include "mti6x0device.h"
 #include "mti8x0device.h"
@@ -197,7 +197,7 @@ DeviceFactory::DeviceTypeId DeviceFactory::deviceToTypeId(XsDeviceId const& devi
 		if (deviceId.isMtiX0())
 			return DeviceType::MTI_X0;
 		if (deviceId.isMtiX() && deviceId.isGnss())
-			return DeviceType::MTI_7;
+			return DeviceType::MTI_7_MTI_8;//this is used for both the MTi-7 and MTi-8
 		if (deviceId.isMtiX())
 			return DeviceType::MTI_X;
 		if (deviceId.isMti3X0())
@@ -249,7 +249,7 @@ void DeviceFactory::registerDevices()
 	(void)registerStandaloneDeviceType(DeviceType::MTI_X0,			&MtiX0Device::constructStandalone);
 	(void)registerStandaloneDeviceType(DeviceType::MTI_X00,			&MtiX00Device::constructStandalone);
 	(void)registerStandaloneDeviceType(DeviceType::MTIG,			&MtigDevice::constructStandalone);
-	(void)registerStandaloneDeviceType(DeviceType::MTI_7,			&Mti7Device::constructStandalone);
+	(void)registerStandaloneDeviceType(DeviceType::MTI_7_MTI_8,		&MTi7_MTi8Device::constructStandalone);
 	(void)registerStandaloneDeviceType(DeviceType::MTI_3X0,			&Mti3X0Device::constructStandalone);
 	(void)registerStandaloneDeviceType(DeviceType::MTI_6X0,			&Mti6X0Device::constructStandalone);
 	(void)registerStandaloneDeviceType(DeviceType::MTI_8X0,			&Mti8X0Device::constructStandalone);

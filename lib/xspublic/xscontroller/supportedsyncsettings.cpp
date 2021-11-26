@@ -90,7 +90,7 @@ XsSyncSettingArray supportedSyncSettings(XsDeviceId const& deviceId)
 	else if (deviceId.isMtig())
 		return supportedSyncSettingsForMtigDevice();
 	else if (deviceId.isMtiX() && deviceId.isGnss())
-		return supportedSyncSettingsForMti7Device();
+		return supportedSyncSettingsForMti7AndMTi8Devices();//this used for both the MTi-7 and MTi-8
 	else if (deviceId.isMti6X0() && deviceId.isGnss() && deviceId.hasInternalGnss())
 		return supportedSyncSettingsForMt6x0IntGnssDevice();
 	else if (deviceId.isMti6X0() && deviceId.isGnss())
@@ -444,8 +444,8 @@ XsSyncSettingArray supportedSyncSettingsForMtigDevice()
 	return settings;
 }
 
-/*! \brief get list of supported synchronizations settings for an Mti7Device */
-XsSyncSettingArray supportedSyncSettingsForMti7Device()
+/*! \brief get list of supported synchronizations settings for an Mti7 or MTi8 Device */
+XsSyncSettingArray supportedSyncSettingsForMti7AndMTi8Devices()
 {
 	XsSyncSettingArray settings = supportedSyncSettingsForMtiXDevice();
 

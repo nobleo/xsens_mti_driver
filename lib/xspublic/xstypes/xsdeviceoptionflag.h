@@ -66,7 +66,7 @@
 #define XSDEVICEOPTIONFLAG_H
 
 /*!	\addtogroup enums Global enumerations
-    @{
+	@{
 */
 /*! \brief Used to enable or disable some device options
 	\sa XsDevice::setDeviceOptionFlags
@@ -87,6 +87,7 @@ enum XsDeviceOptionFlag
 	XDOF_EnableColdFilterResets			= 0x00000400,	//!< When set to 1, The MT performs a cold filter reset every time it goes to measurement
 	XDOF_EnablePositionVelocitySmoother	= 0x00000800,	//!< When set to 1, the MTi will have Position/Velocity Smoother enabled. Only applicable to MTi-680
 	XDOF_EnableContinuousZRU			= 0x00001000,	//!< When set to 1, the MTi filter will perform continuous Zero Rotation Updates for gyroscope bias and noise.
+	XDOF_EnableRawGnssInputForwarding	= 0x00002000,	//!< When set to 1, the MTi will forward the raw input coming from the GNSS receiver encapsulated in an Xbus message.
 
 	XDOF_None							= 0x00000000,	//!< When set to 1, disables all option flags.
 	XDOF_All							= 0x7FFFFFFF	//!< When set to 1, enables all option flags.

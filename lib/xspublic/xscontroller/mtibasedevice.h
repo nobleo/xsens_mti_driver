@@ -115,8 +115,6 @@ public:
 	uint16_t rs485TransmissionDelay() const;
 	bool setRs485TransmissionDelay(uint16_t delay);
 
-	bool messageLooksSane(const XsMessage& msg) const override;
-
 	bool startRepresentativeMotion() override;
 	bool representativeMotionState() override;
 	XsIccRepMotionResult stopRepresentativeMotion() override;

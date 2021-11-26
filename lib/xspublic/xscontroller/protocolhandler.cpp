@@ -135,7 +135,7 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 {
 	JLTRACEG("Entry");
 	type = static_cast<XsProtocolType>(ProtocolHandler::type());
-	MessageLocation rv(-1, 0, -1, 0);
+	MessageLocation rv;
 
 	int bufferSize = (int)raw.size();
 	if (bufferSize == 0)
@@ -148,56 +148,28 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 	{
 		if (buffer[pre] == XS_PREAMBLE)
 		{
-			// incompletePos is the position of the first incomplete but potentially valid message that is skipped
-			if (rv.m_incompletePos == -1)
-				rv.m_incompletePos = pre;
-
 			JLTRACEG("Preamble found at " << pre);
-			// we found a preamble, see if we can read a message from here
-			if (rv.m_startPos == -1)
-				rv.m_startPos = (int32_t)pre;
 			int remaining = bufferSize - pre;	// remaining bytes in buffer INCLUDING preamble
 
 			if (remaining < XS_LEN_MSGHEADERCS)
 			{
 				JLTRACEG("Not enough header data read");
-				if (rv.m_startPos != pre)
-					continue;
-				rv.m_size = -expectedMessageSize(&buffer[pre], remaining);
-				rv.m_incompleteSize = expectedMessageSize(&buffer[pre], remaining);
-				return rv;
+				if (rv.m_incompletePos == -1)
+				{
+					rv.m_incompletePos = pre;
+					rv.m_incompleteSize = XS_LEN_MSGHEADERCS;
+				}
+				break;
 			}
 
 			// read header
 			const uint8_t* msgStart = &(buffer[pre]);
 			const XsMessageHeader* hdr = (const XsMessageHeader*)msgStart;
-			if (hdr->m_length == XS_EXTLENCODE)
-			{
-				if (remaining < XS_LEN_MSGEXTHEADERCS)
-				{
-					JLTRACEG("Not enough extended header data read");
-					if (rv.m_startPos != pre)
-						continue;
-					rv.m_size = -expectedMessageSize(&buffer[pre], remaining);
-					rv.m_incompleteSize = expectedMessageSize(&buffer[pre], remaining);
-					return rv;
-				}
-			}
-			else if (hdr->m_busId == 0 && hdr->m_messageId == 0)
+			if (hdr->m_busId == 0 && hdr->m_messageId == 0)
 			{
 				// found 'valid' message that isn't actually valid... happens inside GPS raw data
 				// skip to next preamble
 				// and completely ignore this message, since it cannot be valid
-				if (rv.m_incompletePos == pre)
-				{
-					rv.m_incompletePos = -1;
-					rv.m_incompleteSize = 0;
-				}
-				if (rv.m_startPos == pre)
-				{
-					rv.m_startPos = -1;
-					rv.m_size = 0;
-				}
 				//JLDEBUGG("Found invalid valid message");
 				continue;
 			}
@@ -206,19 +178,11 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 			int target = expectedMessageSize(&buffer[pre], remaining);
 
 			JLTRACEG("Bytes in buffer=" << remaining << ", full target = " << target);
+
 			if (!m_ignoreMaxMsgSize && target > (XS_LEN_MSGEXTHEADERCS + XS_MAXDATALEN))
 			{
 				// skip current preamble
-				if (rv.m_size == 0)
-				{
-					/*  only report an error if we didn't already find a valid header
-					    in this case, we're probably parsing data within a message, so we don't want to
-					    skip data unless we're sure we have a valid message
-					*/
-					JLALERTG("Invalid message length: " << target);
-					//JLDEBUGG("Buffer: " << dumpBuffer(buffer, bufferSize));
-					rv.m_startPos = -1;
-				}
+				JLALERTG("Invalid message length: " << target);
 				continue;
 			}
 
@@ -226,22 +190,22 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 			{
 				// not enough data read, skip current preamble
 				JLTRACEG("Not enough data read: " << remaining << " / " << target);
-				if (rv.m_size == 0)
-					rv.m_size = -target;
-				if (rv.m_incompleteSize == 0)
+				if (rv.m_incompletePos == -1)
+				{
+					rv.m_incompletePos = pre;
 					rv.m_incompleteSize = target;
+				}
 				continue;
 			}
+
 			XsMessage rcv;
 			// we have read enough data to fulfill our target so we'll try to parse the message
 			// and check the checksum
-			//if (rcv->loadFromString(msgStart, (uint16_t) target) == XRV_OK)
 			if (rcv.loadFromString(msgStart, (uint16_t)target))
 			{
 				JLTRACEG("OK, size = " << (int) rcv.getTotalMessageSize() << " buffer: " << dumpBuffer(msgStart, target));
 				rv.m_size = (int) rcv.getTotalMessageSize();
-				rv.m_startPos = pre;	// we do this again here because this may not be the first preamble encountered (the check for -1 at the start of the loop is necessary)
-
+				rv.m_startPos = pre;
 #if 0
 				JLDEBUGG("OK: rv.m_size = " << rv.m_size <<
 					" rv.m_startPos = " << rv.m_startPos <<
@@ -249,27 +213,23 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 					" pre = " << pre << " msg " << dumpBuffer(msgStart, target) <<
 					" buffer " << dumpBuffer(buffer, bufferSize));
 #endif
-				if (rv.m_incompletePos == pre)
-				{
-					// We've actually completed the incomplete message
-					rv.m_incompletePos = -1;
-					rv.m_incompleteSize = 0;
-				}
-
-				return rv;
+				break;
 			}
 
-			if (rv.m_startPos == pre)
+			// Only alert the checksum error if this is not an embedded message
+			if (rv.m_incompletePos == -1)
 			{
-				rv.m_startPos = -1;
-				if (rv.m_incompletePos == pre)
-					rv.m_incompletePos = -1;
 				JLALERTG(
 					"Invalid checksum for msg at offset " << pre << " bufferSize = " << bufferSize
 					<< " buffer at offset: " << dumpBuffer(raw.data() + pre, raw.size() - pre));
 			}
+			else
+			{
+				JLTRACEG("Invalid checksum, size = " << (int)rcv.getTotalMessageSize() << " buffer: " << dumpBuffer(msgStart, target));
+			}
 		}
 	}
+
 	JLTRACEG("Exit");
 	return rv;
 }

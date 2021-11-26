@@ -77,6 +77,7 @@
 #include <xstypes/xscanoutputconfigurationarray.h>
 #include <xstypes/xsstringoutputtypearray.h>
 #include <xstypes/xsintarray.h>
+#include "xsgnssreceivertype.h"
 
 using namespace xsens;
 
@@ -144,7 +145,7 @@ MtiBaseDevice::BaseFrequencyResult Mti6X0Device::getBaseFrequencyInternal(XsData
 				return 200;
 
 			case XDI_GnssGroup:
-				return deviceId().isGnss() ? 4 : 0;
+				return deviceId().isGnss() ? XDI_MAX_FREQUENCY_VAL : 0;
 			case XDI_PressureGroup:
 				return 100;
 			case XDI_PositionGroup:
@@ -403,3 +404,43 @@ XsVector Mti6X0Device::gnssLeverArm() const
 	return arm;
 }
 
+/*! \copydoc XsDevice::ubloxGnssPlatform
+*/
+XsUbloxGnssPlatform Mti6X0Device::ubloxGnssPlatform() const
+{
+	XsUbloxGnssPlatform platform = XGP_Portable;
+	auto gnssReceivSett = gnssReceiverSettings();
+	if (gnssReceivSett.size() > 3)
+	{
+		int gnssReceiverModel = gnssReceivSett[0];
+		int gnssReceiverOptions = gnssReceivSett[3];
+
+		//only read the value for u-blox devices
+		XsGnssReceiverType actualType = (XsGnssReceiverType)gnssReceiverModel;
+		if (actualType == XGRT_Ublox_Max_M8Q || actualType == XGRT_Ublox_Neo_M8P || actualType == XGRT_Ublox_ZED_F9P)
+			platform = static_cast<XsUbloxGnssPlatform>(gnssReceiverOptions & 0xFFFF);
+	}
+	return platform;
+}
+
+/*! \copydoc XsDevice::setUbloxGnssPlatform
+*/
+bool Mti6X0Device::setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform)
+{
+	bool result = false;
+	auto gnssReceivSett = gnssReceiverSettings();
+	if (gnssReceivSett.size() > 3)
+	{
+		int gnssReceiverModel = gnssReceivSett[0];
+		int gnssReceiverOptions = gnssReceivSett[3];
+
+		//only set the value for u-blox devices
+		XsGnssReceiverType actualType = (XsGnssReceiverType)gnssReceiverModel;
+		if (actualType == XGRT_Ublox_Max_M8Q || actualType == XGRT_Ublox_Neo_M8P || actualType == XGRT_Ublox_ZED_F9P)
+		{
+			gnssReceivSett[3] = (int) ((((unsigned int)gnssReceiverOptions) & 0xFFFF0000U) | uint16_t(ubloxGnssPlatform));
+			result = setGnssReceiverSettings(gnssReceivSett);
+		}
+	}
+	return result;
+}

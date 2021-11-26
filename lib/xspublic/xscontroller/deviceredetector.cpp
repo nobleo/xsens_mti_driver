@@ -94,6 +94,7 @@ DeviceRedetector::DeviceRedetector(const XsPortInfo& portInfo)
 		m_detectFunctions[XsDeviceId("MTi-620", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XsDeviceId("MTi-630", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectScanPorts;
 		m_detectFunctions[XsDeviceId("MTi-670", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectScanPorts;
+		m_detectFunctions[XsDeviceId("MTi-680", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectScanPorts;
 	}
 	else
 	{
@@ -106,6 +107,7 @@ DeviceRedetector::DeviceRedetector(const XsPortInfo& portInfo)
 		m_detectFunctions[XsDeviceId("MTi-620", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XsDeviceId("MTi-630", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectOneComPort;
 		m_detectFunctions[XsDeviceId("MTi-670", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectOneComPort;
+		m_detectFunctions[XsDeviceId("MTi-680", 0, 0, XS_DID64_BIT)] = &DeviceRedetector::redetectOneComPort;
 	}
 }
 

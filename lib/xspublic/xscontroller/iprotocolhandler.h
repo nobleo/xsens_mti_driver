@@ -133,6 +133,17 @@ public:
 	{
 		(void) ignore;
 	}
+
+	/*! \brief Enables or disables the protocol handler if supported.
+		A disabled protocol handler ignores and discards all data provided through the \a findMessage function
+		\param enable : If true enables the protcol handler, if false it disables it.
+		\returns true if the protocol handler was correctly enabled or disabled, false if the protocol handler doesn't support this function
+	*/
+	virtual bool setEnable(bool enable)
+	{
+		(void) enable;
+		return false;
+	}
 };
 
 //--------------------------------------------------------------------------------

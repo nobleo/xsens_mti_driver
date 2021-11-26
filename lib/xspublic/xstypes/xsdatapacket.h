@@ -1458,7 +1458,7 @@ struct XsDataPacket
 		\param[in] triggerId The trigger data identifier to add data for (e.g. XDI_TriggerIn1 or XDI_TriggerIn2)
 		\returns the trigger indication data of a packet
 	*/
-	XsTriggerIndicationData triggerIndication(XsDataIdentifier triggerId)
+	XsTriggerIndicationData triggerIndication(XsDataIdentifier triggerId) const
 	{
 		XsTriggerIndicationData returnVal;
 		return *XsDataPacket_triggerIndication(this, triggerId, &returnVal);

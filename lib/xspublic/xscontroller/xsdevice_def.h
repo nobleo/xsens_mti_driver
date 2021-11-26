@@ -155,7 +155,7 @@ struct XsFilterProfile;
 //AUTO enum XsOperationalMode;
 //AUTO enum XsAccessControlMode;
 //AUTO struct XsDeviceParameter;
-//AUTO enum XsGnssPlatform;
+//AUTO enum XsUbloxGnssPlatform;
 //AUTO struct XsIccRepMotionResult;
 //AUTO }
 
@@ -406,8 +406,12 @@ public:
 	virtual XsResultValue setDeviceParameter(XsDeviceParameter const& parameter);
 	virtual XsResultValue deviceParameter(XsDeviceParameter& parameter) const;
 
-	virtual XsGnssPlatform gnssPlatform() const;
-	virtual bool setGnssPlatform(XsGnssPlatform gnssPlatform);
+	XSNOEXPORT XSDEPRECATED XsGnssPlatform gnssPlatform() const;
+	XSNOEXPORT XSDEPRECATED virtual bool setGnssPlatform(XsGnssPlatform gnssPlatform);
+	virtual XsUbloxGnssPlatform ubloxGnssPlatform() const;
+	virtual bool setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform);
+	virtual XsIntArray gnssReceiverSettings() const;
+	virtual bool setGnssReceiverSettings(const XsIntArray& gnssReceiverSettings);
 
 	// MTw
 	virtual bool acceptConnection();

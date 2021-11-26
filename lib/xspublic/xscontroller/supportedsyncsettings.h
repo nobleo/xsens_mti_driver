@@ -78,7 +78,7 @@ XsSyncSettingArray supportedSyncSettings(XsDeviceId const& deviceId);
 
 XsSyncSettingArray supportedSyncSettingsForMtx2Device();
 XsSyncSettingArray supportedSyncSettingsForMtiDevice();
-XsSyncSettingArray supportedSyncSettingsForMti7Device();
+XsSyncSettingArray supportedSyncSettingsForMti7AndMTi8Devices();
 XsSyncSettingArray supportedSyncSettingsForMtigDevice();
 XsSyncSettingArray supportedSyncSettingsForMark5MtigX10Device();
 XsSyncSettingArray supportedSyncSettingsForMtDevice();

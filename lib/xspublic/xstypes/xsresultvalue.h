@@ -201,11 +201,14 @@ enum XsResultValue
 	XRV_PERFORMANCE_OK			= 323,	//!< 323: The system running the application has recovered from a previously reported XRV_PERFORMANCE_WARNING.
 
 	// notifications
-	XRV_SHUTTINGDOWN			= 400,	//!< 400: The device is shutting down
+	XRV_SHUTTINGDOWN		= 400,	//!< 400: The device is shutting down
 	XRV_GNSSCONFIGURATIONERROR	= 401,	//!< 401: A configuration item was refused by the GNSS module
-	XRV_GNSSCOMMTIMEOUT			= 402,	//!< 402: The communication with the GNSS module timed out
-	XRV_GNSSERROR				= 403,	//!< 403: Communication between the device and the GNSS module failed
-	XRV_DEVICE_NOT_CALIBRATED	= 404	//!< 404: The EMTS of the device does not contain calibration data
+	XRV_GNSSCOMMTIMEOUT		= 402,	//!< 402: The communication with the GNSS module timed out
+	XRV_GNSSERROR			= 403,	//!< 403: Communication between the device and the GNSS module failed
+	XRV_DEVICE_NOT_CALIBRATED	= 404,	//!< 404: The EMTS of the device does not contain calibration data
+	XRV_GNSSCONNECTIONLOST 		= 405,	//!< 405: Connection lost with the GNSS module
+	XRV_GNSSLOWINPUTRATE		= 406,	//!< 406: GNSS input rate is too low
+	XRV_GNSSINCOMPLETEDATASET	= 407	//!< 407: Incomplete dataset for the GNSS module
 };
 /*! @} */
 typedef enum XsResultValue XsResultValue;
