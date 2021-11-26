@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef XSQUATERNION_H
 #define XSQUATERNION_H
@@ -99,10 +99,13 @@ XSTYPES_DLL_API XsReal XsQuaternion_dotProduct(XsQuaternion const* thisPtr, XsQu
 } // extern "C"
 #endif
 
-struct XsQuaternion {
-XSCPPPROTECTED
-	union {
-		struct {
+struct XsQuaternion
+{
+	XSCPPPROTECTED
+	union
+	{
+		struct
+		{
 			XsReal m_w;		//!< Stores the w component of the quaternion
 			XsReal m_x;		//!< Stores the x component of the quaternion
 			XsReal m_y;		//!< Stores the y component of the quaternion
@@ -284,22 +287,58 @@ public:
 		XsQuaternion_multiply(this, &other, this);
 	}
 
+	/*! \brief Multiplication of \a a quaternion with \a b quaternion
+		\param a The first quaternion to multiply with (left side of multiplication)
+		\param b The second quaternion to multiply with (right side of multiplication)
+		\details Result is stored in this quaternion.
+		Explicit function instead of *= operator needed for java interface, which does not have *= operator
+		\sa XsQuaternion_multiply()
+	*/
+	inline void multiply(const XsQuaternion& a, const XsQuaternion& b)
+	{
+		XsQuaternion_multiply(&a, &b, this);
+	}
+
 	//! \brief Return the w component of the quaternion
-	inline XsReal w() const { return m_w; }
+	inline XsReal w() const
+	{
+		return m_w;
+	}
 	//! \brief Return the x component of the quaternion
-	inline XsReal x() const { return m_x; }
+	inline XsReal x() const
+	{
+		return m_x;
+	}
 	//! \brief Return the y component of the quaternion
-	inline XsReal y() const { return m_y; }
+	inline XsReal y() const
+	{
+		return m_y;
+	}
 	//! \brief Return the z component of the quaternion
-	inline XsReal z() const { return m_z; }
+	inline XsReal z() const
+	{
+		return m_z;
+	}
 	//! \brief Return a reference to the w component of the quaternion
-	inline XsReal& w() { return m_w; }
+	inline XsReal& w()
+	{
+		return m_w;
+	}
 	//! \brief Return a reference to the x component of the quaternion
-	inline XsReal& x() { return m_x; }
+	inline XsReal& x()
+	{
+		return m_x;
+	}
 	//! \brief Return a reference to the y component of the quaternion
-	inline XsReal& y() { return m_y; }
+	inline XsReal& y()
+	{
+		return m_y;
+	}
 	//! \brief Return a reference to the z component of the quaternion
-	inline XsReal& z() { return m_z; }
+	inline XsReal& z()
+	{
+		return m_z;
+	}
 
 	//! \brief Swap the contents with \a other
 	inline void swap(XsQuaternion& other)
@@ -317,9 +356,9 @@ public:
 	inline bool operator ==(const XsQuaternion& other) const
 	{
 		return	m_w == other.m_w &&
-				m_x == other.m_x &&
-				m_y == other.m_y &&
-				m_z == other.m_z;
+			m_x == other.m_x &&
+			m_y == other.m_y &&
+			m_z == other.m_z;
 	}
 
 	//! \brief Returns true if the fields of this and \a other are within \a tolerance of each otehr
@@ -338,13 +377,13 @@ public:
 
 #ifdef __cplusplus
 //! \brief Return the negated version of the Quaternion \a q (w,-x,-y,-z)
-inline XsQuaternion operator-(const XsQuaternion &q)
+inline XsQuaternion operator-(const XsQuaternion& q)
 {
 	return XsQuaternion(q.w(), -q.x(), -q.y(), -q.z());
 }
 
 //! \brief Multiply \a lhs by \a rhs and return the result
-inline XsQuaternion operator *(const XsQuaternion& lhs, const XsQuaternion &rhs)
+inline XsQuaternion operator *(const XsQuaternion& lhs, const XsQuaternion& rhs)
 {
 	XsQuaternion tmp(lhs);
 	tmp *= rhs;

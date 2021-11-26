@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef COMMUNICATOR_H
 #define COMMUNICATOR_H
@@ -84,7 +84,8 @@ struct XsByteArray;
 struct XsString;
 struct XsMessage;
 struct XsDeviceConfiguration;
-namespace xsens {
+namespace xsens
+{
 class ReplyMonitor;
 }
 
@@ -100,7 +101,11 @@ public:
 	struct Deleter
 	{
 		//! \brief A function that destroys communicator
-		void operator()(Communicator* c) {if (c != nullptr) c->destroy();}
+		void operator()(Communicator* c)
+		{
+			if (c != nullptr)
+				c->destroy();
+		}
 	};
 
 	//! \brief Initializes of UniquePtr<T>
@@ -123,27 +128,33 @@ public:
 
 	Communicator(void);
 
-	bool doTransaction(const XsMessage &message);
-	bool doTransaction(const XsMessage &message, uint32_t timeout);
-	bool doTransaction(const XsMessage &message, XsMessage &rcv);
+	bool doTransaction(const XsMessage& message);
+	bool doTransaction(const XsMessage& message, uint32_t timeout);
+	bool doTransaction(const XsMessage& message, XsMessage& rcv);
 
 	//! \copybrief Communicator::doTransaction
-	virtual bool doTransaction(const XsMessage &message, XsMessage &rcv, uint32_t timeout) = 0;
+	virtual bool doTransaction(const XsMessage& message, XsMessage& rcv, uint32_t timeout) = 0;
 
 	//! \brief Sets a default \a timeout
-	void setDefaultTimeout(uint32_t timeout) { m_defaultTimeout = timeout; }
+	void setDefaultTimeout(uint32_t timeout)
+	{
+		m_defaultTimeout = timeout;
+	}
 
 	//! \returns a default timeout
-	uint32_t defaultTimeout() const { return m_defaultTimeout; }
+	uint32_t defaultTimeout() const
+	{
+		return m_defaultTimeout;
+	}
 
 	XsResultValue lastResult() const;
 	XsString lastResultText() const;
-	virtual void handleMessage(const XsMessage &message);
+	virtual void handleMessage(const XsMessage& message);
 	XsSize childDeviceCount() const;
 	XsDeviceId masterDeviceId() const;
 
 	std::shared_ptr<ReplyObject> addReplyObject(uint8_t mid);
-	std::shared_ptr<ReplyObject> addReplyObject(uint8_t mid, XsSize offset, XsSize size, uint8_t const * data);
+	std::shared_ptr<ReplyObject> addReplyObject(uint8_t mid, XsSize offset, XsSize size, uint8_t const* data);
 	std::shared_ptr<ReplyObject> addReplyObject(ReplyObject* obj);
 
 	// live stuff
@@ -173,7 +184,7 @@ public:
 		\param message a message
 		\returns true on successful write, false otherwise. This doesn't guarantee proper delivery of the message. Use doTransaction for that
 	*/
-	virtual bool writeMessage(const XsMessage &message) = 0;
+	virtual bool writeMessage(const XsMessage& message) = 0;
 
 	/*! \brief Flushes all remaining data on the open port
 	*/
@@ -185,7 +196,10 @@ public:
 
 	/*! \brief Schedules to close the open port
 	*/
-	virtual void scheduleClosePort() { closePort(); }
+	virtual void scheduleClosePort()
+	{
+		closePort();
+	}
 
 	/*! \returns true if the port is open
 	*/
@@ -201,7 +215,7 @@ public:
 		\param detectRs485 When set to true it will try to detect and use an RS485 interface
 		\returns true if port is successfully open
 	*/
-	virtual bool openPort(const XsPortInfo &portInfo, OpenPortStage stage = OPS_Full, bool detectRs485 = false) = 0;
+	virtual bool openPort(const XsPortInfo& portInfo, OpenPortStage stage = OPS_Full, bool detectRs485 = false) = 0;
 
 	/*! \brief Reopens the port
 		\param stage A openning stage of a communication port
@@ -212,7 +226,7 @@ public:
 
 	/*! \brief Returns true if the \a other device is docked at this device
 	*/
-	virtual bool isDockedAt(Communicator *other) const = 0;
+	virtual bool isDockedAt(Communicator* other) const = 0;
 
 	/*! \brief Either disable or enable (default) the keep alive mechanism (if supported by the device)
 	*/
@@ -254,10 +268,10 @@ public:
 	virtual void abortLoadLogFile() = 0;
 
 	/*!	\brief Open the log file
-	`	\param filename a name of file to open
+	    `	\param filename a name of file to open
 		\returns true if the file was opened successfully
 	*/
-	virtual bool openLogFile(const XsString &filename) = 0;
+	virtual bool openLogFile(const XsString& filename) = 0;
 
 	/*! \returns The name of the logfile
 	*/
@@ -299,39 +313,42 @@ public:
 		\note SerialCommunicator & MTi: 5 (GotoConfig, ReqDeviceId, GotoConfig, Initbus, ReqConfiguration)
 		\note BodyPack requires more because we also may have some other meta-data in the file, but base is: 7 (ReqDeviceId, RequestControl, SetDataPort, GotoConfig [Communicator & XsDevice], Initbus, ReqConfiguration)
 	*/
-	static int configurationMessageSearchLimit() { return 16; }
+	static int configurationMessageSearchLimit()
+	{
+		return 20;
+	}
 
 	virtual void setCredentials(XsString const& id, XsString const& key);
 
-	bool sanityCheck(XsMessage const & msg) const;
+	bool sanityCheck(XsMessage const& msg) const;
 
 	/*! \brief Adds a protocol handler
 		\param handler an \ref IProtocolHandler
 	*/
-	virtual void addProtocolHandler(IProtocolHandler *handler);
+	virtual void addProtocolHandler(IProtocolHandler* handler);
 	void removeProtocolHandler(XsProtocolType type);
 	bool hasProtocol(XsProtocolType type) const;
 
-	void setMasterDevice(XsDevice *masterDevice);
+	void setMasterDevice(XsDevice* masterDevice);
 
 protected:
 	virtual ~Communicator();
 	virtual void prepareForDestruction();
 
-	XsDevice *masterDevice() const;
+	XsDevice* masterDevice() const;
 	std::shared_ptr<ProtocolManager> protocolManager() const;
 
 	// these may be a bit surprising:
 	void setLastResult(XsResultValue lastResult, XsString const& text = XsString()) const;
 	XsResultValue setAndReturnLastResult(XsResultValue lastResult, XsString const& text = XsString()) const;
 
-	void setMasterDeviceId(const XsDeviceId &deviceId);
+	void setMasterDeviceId(const XsDeviceId& deviceId);
 
 	//! \brief Prepared for destruction boolean variable
 	bool m_preparedForDestruction;
 
 	//! \brief A master device object
-	XsDevice *m_masterInfo;
+	XsDevice* m_masterInfo;
 
 	//! \brief A shared pointer to protocl manager
 	std::shared_ptr<ProtocolManager> m_protocolManager;

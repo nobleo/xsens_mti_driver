@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include "devicecommunicator.h"
 #include "xsdevice_def.h"
@@ -71,7 +71,7 @@
 #include "protocolhandler.h"
 
 #ifdef LOG_COMMUNICATOR_RX_TX
-#include <xscommon/xprintf.h>
+	#include <xscommon/xprintf.h>
 #endif
 
 /*! \class DeviceCommunicator
@@ -107,7 +107,7 @@ DeviceCommunicator::~DeviceCommunicator()
 	\param timeout The timeout in ms
 	\returns True if successful
 */
-bool DeviceCommunicator::doTransaction(const XsMessage &msg, XsMessage &rcv, uint32_t timeout)
+bool DeviceCommunicator::doTransaction(const XsMessage& msg, XsMessage& rcv, uint32_t timeout)
 {
 	XsXbusMessageId expected = static_cast<XsXbusMessageId>(msg.getMessageId() + 1);
 
@@ -174,11 +174,14 @@ XsResultValue DeviceCommunicator::getDeviceId()
 	if (!doTransaction(snd, rcv_did))
 		return setAndReturnLastResult(XRV_COULDNOTREADSETTINGS);
 
-	uint64_t deviceId = 0;
-	if (rcv_did.getDataSize() == 4)
-		deviceId = rcv_did.getDataLong();
-	else if (rcv_did.getDataSize() == 8)
-		deviceId = rcv_did.getDataLongLong();
+	uint64_t deviceId = rcv_did.getDataLong();
+	if (rcv_did.getDataSize() == 8)
+	{
+		XsDeviceId did1(deviceId);
+		XsDeviceId did2(rcv_did.getDataLong(4));
+		if (!did1.isLegacyDeviceId() || !did2.isLegacyDeviceId())//a must-have workaround for Mk5s with FTT firmware
+			deviceId = rcv_did.getDataLongLong();
+	}
 
 	XsMessage rcv_pdc;
 	XsString productCode;
@@ -186,7 +189,7 @@ XsResultValue DeviceCommunicator::getDeviceId()
 	if (doTransaction(snd, rcv_pdc))
 	{
 		const char* pc = (const char*) rcv_pdc.getDataBuffer();
-		std::string result(pc?pc:"", rcv_pdc.getDataSize());
+		std::string result(pc ? pc : "", rcv_pdc.getDataSize());
 		std::string::size_type thingy = result.find(" ");
 		if (thingy < rcv_pdc.getDataSize())
 			result.erase(result.begin() + (unsigned)thingy, result.end());
@@ -242,7 +245,7 @@ XsResultValue DeviceCommunicator::gotoMeasurement()
 	\param message The message to write
 	\returns true on successful write, false otherwise. This doesn't guarantee proper delivery of the message. Use doTransaction for that.
 */
-bool DeviceCommunicator::writeMessage(const XsMessage &message)
+bool DeviceCommunicator::writeMessage(const XsMessage& message)
 {
 	XsByteArray raw;
 	if (ProtocolHandler::composeMessage(raw, message) < 0)
@@ -284,7 +287,7 @@ DeviceCommunicator::RxChannelId DeviceCommunicator::addRxChannel()
 	\param[in] channel the channel to extract from
 	\returns XRV_OK on success, something else on failure
 */
-XsResultValue DeviceCommunicator::extractMessages(const XsByteArray &rawIn, std::deque<XsMessage>& messages, RxChannelId channel)
+XsResultValue DeviceCommunicator::extractMessages(const XsByteArray& rawIn, std::deque<XsMessage>& messages, RxChannelId channel)
 {
 	if (channel >= m_messageExtractors.size())
 		return XRV_ERROR;
@@ -304,6 +307,13 @@ XsResultValue DeviceCommunicator::extractMessages(const XsByteArray &rawIn, std:
 	return res;
 }
 
+/*! \brief Returns the number of message extractor this device communicator has
+*/
+XsSize DeviceCommunicator::messageExtractorCount() const
+{
+	return m_messageExtractors.size();
+}
+
 /*! \brief Returns the message extractor for the given rx channel
 */
 MessageExtractor& DeviceCommunicator::messageExtractor(RxChannelId channel)
@@ -314,7 +324,7 @@ MessageExtractor& DeviceCommunicator::messageExtractor(RxChannelId channel)
 
 /*! \copybrief Communicator::handleMessage
 */
-void DeviceCommunicator::handleMessage(const XsMessage &message)
+void DeviceCommunicator::handleMessage(const XsMessage& message)
 {
 #ifdef LOG_COMMUNICATOR_RX_TX
 	logRxStream(message);
@@ -357,7 +367,7 @@ void DeviceCommunicator::abortLoadLogFile()
 {
 }
 
-bool DeviceCommunicator::openLogFile(const XsString &)
+bool DeviceCommunicator::openLogFile(const XsString&)
 {
 	return false;
 }
@@ -414,7 +424,7 @@ void DeviceCommunicator::generateLogFiles()
 	XsString extension("mtb");
 #endif
 
-	auto generateFilename = [&](XsString const& stream)
+	auto generateFilename = [&](XsString const & stream)
 	{
 		std::string temp = xprintf("communicator_%s_%s_%s.%s", stream.c_str(), date.c_str(), time.c_str(), extension.c_str());
 		return XsString(temp);

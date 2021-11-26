@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef XSSOCKET_H
 #define XSSOCKET_H
@@ -75,31 +75,34 @@ struct XsSocketInterface;
 typedef struct XsSocket XsSocket;
 
 /*! \brief the protocol on top of IP */
-enum IpProtocol {
+enum IpProtocol
+{
 	IP_UDP, /*!< \brief The UDP/IP protocol */
 	IP_TCP  /*!< \brief The TCP/IP protocol */
 };
 
 /*! \brief The network layer protocol, or IP address family */
-enum NetworkLayerProtocol {
+enum NetworkLayerProtocol
+{
 	NLP_IPV4, /*!< \brief IPv4 address family */
 	NLP_IPV6, /*!< \brief IPv6 address family */
 	NLP_IPVX  /*!< \brief any IP address family */
 };
 
-enum XsSocketOption {
+enum XsSocketOption
+{
 	XSO_ReuseAddress,	/*!< \brief Allow bind to reuse a local port (using different local addresses) */
 	XSO_ReusePort		/*!< \brief Allow bind to reuse the exact local address */
 };
 
 #ifdef WIN32
-#	if defined(_WIN64)
-	typedef unsigned __int64 XSOCKET;
-#	else
-	typedef unsigned int XSOCKET;
-#	endif
+	#if defined(_WIN64)
+		typedef unsigned __int64 XSOCKET;
+	#else
+		typedef unsigned int XSOCKET;
+	#endif
 #else
-typedef int XSOCKET;
+	typedef int XSOCKET;
 #endif
 
 #ifdef __cplusplus
@@ -118,7 +121,7 @@ XSTYPES_DLL_API XsResultValue XsSocket_close(XsSocket* thisPtr);
 
 XSTYPES_DLL_API XSOCKET XsSocket_nativeDescriptor(XsSocket const* thisPtr);
 
-XSTYPES_DLL_API int XsSocket_select(XsSocket* thisPtr, int mstimeout, int *canRead, int *canWrite);
+XSTYPES_DLL_API int XsSocket_select(XsSocket* thisPtr, int mstimeout, int* canRead, int* canWrite);
 XSTYPES_DLL_API int XsSocket_read(XsSocket* thisPtr, void* dest, XsSize size, int timeout);
 XSTYPES_DLL_API int XsSocket_readFrom(XsSocket* thisPtr, void* dest, XsSize size, XsString* hostname, uint16_t* port, int timeout);
 XSTYPES_DLL_API int XsSocket_read2ByteArray(XsSocket* thisPtr, XsByteArray* dest, int timeout);
@@ -140,7 +143,7 @@ XSTYPES_DLL_API XsResultValue XsSocket_listen(XsSocket* thisPtr, int maxPending)
 XSTYPES_DLL_API XsResultValue XsSocket_connect(XsSocket* thisPtr, const XsString* host, uint16_t port);
 
 XSTYPES_DLL_API int XsSocket_isUsable(const XsSocket* thisPtr);
-XSTYPES_DLL_API void XsSocket_getRemoteAddress(const XsSocket* thisPtr, XsString *address);
+XSTYPES_DLL_API void XsSocket_getRemoteAddress(const XsSocket* thisPtr, XsString* address);
 XSTYPES_DLL_API int XsSocket_getLastSystemError(const XsSocket* thisPtr);
 XSTYPES_DLL_API int XsSocket_enableBroadcasts(XsSocket* thisPtr, int enable);
 XSTYPES_DLL_API int XsSocket_broadcast(XsSocket* thisPtr, const void* buffer, XsSize size, uint16_t port);
@@ -322,7 +325,7 @@ struct XsSocket
 	}
 
 	/*! \brief \copybrief XsSocket_flush
-	 */
+	*/
 	void flush()
 	{
 		XsSocket_flush(this);
@@ -334,7 +337,7 @@ struct XsSocket
 		\param[in,out] canWrite if not null then will be set to non-zero to indicate that the socket can be written to.
 		\returns -1 on error, 0 on timeout, or a positive number otherwise
 	*/
-	int select(int mstimeout, int *canRead, int *canWrite)
+	int select(int mstimeout, int* canRead, int* canWrite)
 	{
 		return XsSocket_select(this, mstimeout, canRead, canWrite);
 	}
@@ -353,16 +356,16 @@ struct XsSocket
 	}
 
 	/*! \brief Allocate memory for a socket */
-	inline void* operator new(size_t)
+	inline void* operator new (size_t)
 	{
-		XsSocket *s = XsSocket_allocate();
+		XsSocket* s = XsSocket_allocate();
 		if (!s)
 			throw std::bad_alloc();
 		return s;
 	}
 
 	/*! \brief De-allocate the socket */
-	inline void operator delete(void* p) noexcept
+	inline void operator delete (void* p) noexcept
 	{
 		XsSocket_free(reinterpret_cast<XsSocket*>(p));
 	}
@@ -497,7 +500,7 @@ struct XsSocket
 	}
 private:
 #endif
-	struct XsSocketPrivate *d;
+	struct XsSocketPrivate* d;
 };
 
 #endif

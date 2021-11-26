@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #include "protocolhandler.h"
 #include <xstypes/xsmessage.h>
@@ -68,8 +68,8 @@
 #include <iomanip>
 #define DUMP_BUFFER_ON_ERROR	512		// this define doubles as the maximum buffer dump size, set to 0 to remove limit
 #ifdef DUMP_BUFFER_ON_ERROR
-#include <sstream>
-#include <algorithm>
+	#include <sstream>
+	#include <algorithm>
 #endif
 
 /*! \class ProtocolHandler
@@ -107,9 +107,9 @@ static int expectedMessageSize(const unsigned char* buffer, int sz)
 		if (sz < 6)
 			return XS_EXTLENCODE + XS_LEN_MSGEXTHEADERCS;	// typical minimum size at which point extended size is needed
 
-		return XS_LEN_MSGEXTHEADERCS + (int) (((uint32_t) hdr->m_datlen.m_extended.m_length.m_high * 256 + (uint32_t) hdr->m_datlen.m_extended.m_length.m_low));
+		return XS_LEN_MSGEXTHEADERCS + (int)(((uint32_t) hdr->m_datlen.m_extended.m_length.m_high * 256 + (uint32_t) hdr->m_datlen.m_extended.m_length.m_low));
 	}
-	return XS_LEN_MSGHEADERCS + (int) (hdr->m_length);
+	return XS_LEN_MSGHEADERCS + (int)(hdr->m_length);
 }
 
 /*! \brief Write the contents of a uint8 buffer to string as hex characters */
@@ -211,9 +211,9 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 				// skip current preamble
 				if (rv.m_size == 0)
 				{
-					/* only report an error if we didn't already find a valid header
-					in this case, we're probably parsing data within a message, so we don't want to
-					skip data unless we're sure we have a valid message
+					/*  only report an error if we didn't already find a valid header
+					    in this case, we're probably parsing data within a message, so we don't want to
+					    skip data unless we're sure we have a valid message
 					*/
 					JLALERTG("Invalid message length: " << target);
 					//JLDEBUGG("Buffer: " << dumpBuffer(buffer, bufferSize));
@@ -266,7 +266,7 @@ MessageLocation ProtocolHandler::findMessage(XsProtocolType& type, const XsByteA
 					rv.m_incompletePos = -1;
 				JLALERTG(
 					"Invalid checksum for msg at offset " << pre << " bufferSize = " << bufferSize
-					<< " buffer at offset: " << dumpBuffer(raw.data()+pre, raw.size()-pre));
+					<< " buffer at offset: " << dumpBuffer(raw.data() + pre, raw.size() - pre));
 			}
 		}
 	}
@@ -307,7 +307,7 @@ int ProtocolHandler::minimumMessageSize() const
 /*! \brief Returns the maximum size of a valid message of this protocol including preambles and checksums */
 int ProtocolHandler::maximumMessageSize() const
 {
-	return XS_LEN_MSGEXTHEADERCS+XS_MAXDATALEN;	// maximum size of xsens xbus protocol message
+	return XS_LEN_MSGEXTHEADERCS + XS_MAXDATALEN;	// maximum size of xsens xbus protocol message
 }
 
 /*! \brief Compose a message for transmission

@@ -1,66 +1,66 @@
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 
-//  Copyright (c) 2003-2020 Xsens Technologies B.V. or subsidiaries worldwide.
+//  Copyright (c) 2003-2021 Xsens Technologies B.V. or subsidiaries worldwide.
 //  All rights reserved.
-//
+//  
 //  Redistribution and use in source and binary forms, with or without modification,
 //  are permitted provided that the following conditions are met:
-//
+//  
 //  1.	Redistributions of source code must retain the above copyright notice,
 //  	this list of conditions, and the following disclaimer.
-//
+//  
 //  2.	Redistributions in binary form must reproduce the above copyright notice,
 //  	this list of conditions, and the following disclaimer in the documentation
 //  	and/or other materials provided with the distribution.
-//
+//  
 //  3.	Neither the names of the copyright holders nor the names of their contributors
 //  	may be used to endorse or promote products derived from this software without
 //  	specific prior written permission.
-//
+//  
 //  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
 //  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
 //  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
 //  THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+//  SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
 //  OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 //  HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR
 //  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS
-//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES
-//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE
+//  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.THE LAWS OF THE NETHERLANDS 
+//  SHALL BE EXCLUSIVELY APPLICABLE AND ANY DISPUTES SHALL BE FINALLY SETTLED UNDER THE RULES 
+//  OF ARBITRATION OF THE INTERNATIONAL CHAMBER OF COMMERCE IN THE HAGUE BY ONE OR MORE 
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
-//
+//  
 
 #ifndef XSDATAPACKET_H
 #define XSDATAPACKET_H
@@ -92,7 +92,7 @@
 #include "xshandid.h"
 
 #ifndef XSNOEXPORT
-#define XSNOEXPORT
+	#define XSNOEXPORT
 #endif
 
 //AUTO namespace xstypes {
@@ -101,8 +101,7 @@ struct XsDataPacket;
 struct XSNOEXPORT DataPacketPrivate;
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 #ifndef __cplusplus
 typedef struct XsDataPacket XsDataPacket;
@@ -260,25 +259,25 @@ XSTYPES_DLL_API int XsDataPacket_containsGnssPvtPulse(const XsDataPacket* thisPt
 XSTYPES_DLL_API void XsDataPacket_setGnssPvtPulse(XsDataPacket* thisPtr, uint32_t counter);
 
 XSTYPES_DLL_API XsDataPacket* XsDataPacket_merge(XsDataPacket* thisPtr, const XsDataPacket* other, int overwrite);
-XSTYPES_DLL_API void XsDataPacket_setTriggerIndication(XsDataPacket* thisPtr, XsDataIdentifier triggerId, const XsTriggerIndicationData * triggerIndicationData);
+XSTYPES_DLL_API void XsDataPacket_setTriggerIndication(XsDataPacket* thisPtr, XsDataIdentifier triggerId, const XsTriggerIndicationData* triggerIndicationData);
 XSTYPES_DLL_API XsTriggerIndicationData* XsDataPacket_triggerIndication(const XsDataPacket* thisPtr, XsDataIdentifier triggerId, XsTriggerIndicationData* returnVal);
 XSTYPES_DLL_API int XsDataPacket_containsTriggerIndication(const XsDataPacket* thisPtr, XsDataIdentifier triggerId);
 XSTYPES_DLL_API void XsDataPacket_toMessage(const XsDataPacket* thisPtr, XsMessage* msg);
 
-XSTYPES_DLL_API void XsDataPacket_setAwindaSnapshot(XsDataPacket* thisPtr, XsSnapshot const * data, int retransmission);
+XSTYPES_DLL_API void XsDataPacket_setAwindaSnapshot(XsDataPacket* thisPtr, XsSnapshot const* data, int retransmission);
 XSTYPES_DLL_API XsSnapshot* XsDataPacket_awindaSnapshot(const XsDataPacket* thisPtr, XsSnapshot* returnVal);
 XSTYPES_DLL_API int XsDataPacket_containsAwindaSnapshot(const XsDataPacket* thisPtr);
 XSTYPES_DLL_API int XsDataPacket_isAwindaSnapshotARetransmission(const XsDataPacket* thisPtr);
 
-XSTYPES_DLL_API void XsDataPacket_setFullSnapshot(XsDataPacket* thisPtr, XsSnapshot const * data, int retransmission);
+XSTYPES_DLL_API void XsDataPacket_setFullSnapshot(XsDataPacket* thisPtr, XsSnapshot const* data, int retransmission);
 XSTYPES_DLL_API XsSnapshot* XsDataPacket_fullSnapshot(const XsDataPacket* thisPtr, XsSnapshot* returnVal);
 XSTYPES_DLL_API int XsDataPacket_containsFullSnapshot(const XsDataPacket* thisPtr);
 
-XSTYPES_DLL_API void XsDataPacket_setGloveSnapshot(XsDataPacket* thisPtr, XsGloveSnapshot const * data, int retransmission, XsHandId hand);
+XSTYPES_DLL_API void XsDataPacket_setGloveSnapshot(XsDataPacket* thisPtr, XsGloveSnapshot const* data, int retransmission, XsHandId hand);
 XSTYPES_DLL_API XsGloveSnapshot* XsDataPacket_gloveSnapshot(const XsDataPacket* thisPtr, XsGloveSnapshot* returnVal, XsHandId hand);
 XSTYPES_DLL_API int XsDataPacket_containsGloveSnapshot(const XsDataPacket* thisPtr, XsHandId hand);
 
-XSTYPES_DLL_API void XsDataPacket_setRawBlob(XsDataPacket* thisPtr, const XsByteArray * data);
+XSTYPES_DLL_API void XsDataPacket_setRawBlob(XsDataPacket* thisPtr, const XsByteArray* data);
 XSTYPES_DLL_API XsByteArray* XsDataPacket_rawBlob(const XsDataPacket* thisPtr, XsByteArray* returnVal);
 XSTYPES_DLL_API int XsDataPacket_containsRawBlob(const XsDataPacket* thisPtr);
 
@@ -295,11 +294,12 @@ XSTYPES_DLL_API int XsDataPacket_privateCount();
 #ifdef __cplusplus
 } // extern "C"
 #ifndef XSENS_NO_STL
-#include <map>	// only needed for simplifiedContents()
+	#include <map>	// only needed for simplifiedContents()
 #endif
 #endif
 
-struct XsDataPacket {
+struct XsDataPacket
+{
 #ifdef __cplusplus
 	/*! \brief Default constructor, initializes empty data packet or from the supplied \a msg
 		\param msg Either 0 to create an empty object or a pointer to a valid %XsMessage containing
@@ -812,7 +812,7 @@ struct XsDataPacket {
 	}
 
 	/*! \brief \copybrief XsDataPacket_storedDeviceId(const XsDataPacket*, XsDeviceId*)
-	  \returns the device ID stored in this packet
+	    \returns the device ID stored in this packet
 	*/
 	inline XsDeviceId storedDeviceId(void) const
 	{
@@ -833,7 +833,7 @@ struct XsDataPacket {
 	}
 
 	/*! \brief \copybrief XsDataPacket_storedLocationId(const XsDataPacket*)
-	\returns the location ID stored in this packet
+	    \returns the location ID stored in this packet
 	*/
 	inline uint16_t storedLocationId(void) const
 	{
@@ -1343,7 +1343,7 @@ struct XsDataPacket {
 	/*! \copydoc XsDataPacket_setFullSnapshot(XsDataPacket*, XsSnapshot const *, int) */
 	XSNOEXPORT inline void setFullSnapshot(XsSnapshot const& data, bool retransmission)
 	{
-		XsDataPacket_setFullSnapshot(this, &data, retransmission?1:0);
+		XsDataPacket_setFullSnapshot(this, &data, retransmission ? 1 : 0);
 	}
 	/*! \brief \copybrief XsDataPacket_awindaSnapshot */
 	XSNOEXPORT inline XsSnapshot awindaSnapshot(void) const
@@ -1361,7 +1361,7 @@ struct XsDataPacket {
 	/*! \brief \copybrief XsDataPacket_setAwindaSnapshot */
 	XSNOEXPORT inline void setAwindaSnapshot(XsSnapshot const& raw, bool retransmission)
 	{
-		XsDataPacket_setAwindaSnapshot(this, &raw, retransmission?1:0);
+		XsDataPacket_setAwindaSnapshot(this, &raw, retransmission ? 1 : 0);
 	}
 
 	/*! \brief \copybrief XsDataPacket_containsAwindaSnapshot(const XsDataPacket*) */
@@ -1392,7 +1392,7 @@ struct XsDataPacket {
 	/*! \copydoc XsDataPacket_merge(XsDataPacket*, const XsDataPacket*, int) */
 	inline XsDataPacket& merge(const XsDataPacket& other, bool overwrite = true)
 	{
-		return *XsDataPacket_merge(this, &other, overwrite?1:0);
+		return *XsDataPacket_merge(this, &other, overwrite ? 1 : 0);
 	}
 
 	/*! \brief Set the time of arrival of the data packet
@@ -1441,7 +1441,7 @@ struct XsDataPacket {
 	}
 
 	/*! \copydoc XsDataPacket_setTriggerIndication(XsDataPacket*, XsDataIdentifier, const XsTriggerIndicationData *) */
-	void setTriggerIndication(XsDataIdentifier triggerId, const XsTriggerIndicationData &triggerIndicationData)
+	void setTriggerIndication(XsDataIdentifier triggerId, const XsTriggerIndicationData& triggerIndicationData)
 	{
 		XsDataPacket_setTriggerIndication(this, triggerId, &triggerIndicationData);
 	}
@@ -1478,7 +1478,7 @@ struct XsDataPacket {
 	}
 
 	/*! \copydoc XsDataPacket_setRawBlob(XsDataPacket*, const XsByteArray *) */
-	inline void setRawBlob(const XsByteArray &data)
+	inline void setRawBlob(const XsByteArray& data)
 	{
 		XsDataPacket_setRawBlob(this, &data);
 	}
@@ -1532,7 +1532,7 @@ struct XsDataPacket {
 	}
 #endif
 
-//protected:
+	//protected:
 	/*! \privatesection */
 #endif // __cplusplus
 	struct XSNOEXPORT DataPacketPrivate* d;
