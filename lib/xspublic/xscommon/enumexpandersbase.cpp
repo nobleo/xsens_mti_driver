@@ -187,8 +187,12 @@ JLENUMEXPANDER(XsResultValue,
 	JLENUMCASE(XRV_GNSSCONFIGURATIONERROR)	//!< 401: A configuration item was refused by the GNSS module
 	JLENUMCASE(XRV_GNSSCOMMTIMEOUT) //!< 402: The communication with the GNSS module timed out
 	JLENUMCASE(XRV_GNSSERROR) //!< 403: Communication between the device and the GNSS module failed
+	JLENUMCASE(XRV_GNSSCONNECTIONLOST) //!< 405: Connection lost with the GNSS module
+	JLENUMCASE(XRV_GNSSLOWINPUTRATE) //!< 406: GNSS input rate is too low
+	JLENUMCASE(XRV_GNSSINCOMPLETEDATASET) //!< 407: Incomplete dataset for the GNSS module
+
 	JLENUMCASE(XRV_DEVICE_NOT_CALIBRATED) //!< 404: The EMTS of the device does not contain calibration data
-	JLENUMCASE(XRV_FILE_SYSTEM_CORRUPT) //!< 405: The internal file system of the device has become corrupt
+	JLENUMCASE(XRV_FILE_SYSTEM_CORRUPT) //!< 54: The internal file system of the device has become corrupt
 )
 
 JLENUMEXPANDERHEX(XsXbusMessageId,

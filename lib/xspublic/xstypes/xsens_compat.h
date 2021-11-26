@@ -120,7 +120,7 @@
 #include "xstypedefs.h"
 
 #define LPSTR char *
-#define _T
+#define _T(x) (x)
 
 #define _ASSERT assert
 #define _ASSERTE assert

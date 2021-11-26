@@ -1441,8 +1441,8 @@ void XsDevice::handleMessage(const XsMessage& msg)
 			XsDataPacket packet(&msg);
 			packet.setDeviceId(deviceId());
 			handleDataPacket(packet);
+			break;
 		}
-		break;
 
 		case XMID_Error:
 			handleErrorMessage(msg);
@@ -1539,7 +1539,7 @@ void XsDevice::clearDataCache()
 {
 	LockGuarded lockG(&m_deviceMutex);
 
-	for (auto it : m_dataCache)
+	for (auto& it : m_dataCache)
 		delete it.second;
 	m_dataCache.clear();
 	//m_latestLivePacket->clear();
@@ -1562,8 +1562,8 @@ void XsDevice::handleUnavailableData(int64_t frameNumber)
 	if (m_stopRecordingPacketId >= 0 && frameNumber > m_stopRecordingPacketId)
 		return; // we're missing data past the end of the recording, ignore
 
-	//JLDEBUGG("Device " << m_deviceId << " Updating m_unavailableDataBoundary from " << m_unavailableDataBoundary << " to " << std::max(m_unavailableDataBoundary, frameNumber));
-	m_unavailableDataBoundary = (std::max)(m_unavailableDataBoundary, frameNumber);
+	//JLDEBUGG("Device " << m_deviceId << " Updating m_unavailableDataBoundary from " << m_unavailableDataBoundary << " to " << (std::max)(m_unavailableDataBoundary, frameNumber));
+	m_unavailableDataBoundary = (std::max)(m_unavailableDataBoundary, frameNumber); // Note: (std::max) to prevent a macro for max() to be substituted
 	checkDataCache();
 }
 
@@ -2241,7 +2241,7 @@ void XsDevice::endRecordingStream()
 			//Mark blocking packet as unavailable.
 			handleUnavailableData(blockingPacketId);
 			//If marking the blocking packet unavailable did not advance the head of the recording stream the next blocking packet follows the current one immediately
-			blockingPacketId = (std::max)(blockingPacketId + 1, latestBufferedPacketId() + 1);
+			blockingPacketId = (std::max)(blockingPacketId + 1, latestBufferedPacketId() + 1); // Note: (std::max) to prevent a macro for max() to be substituted
 		}
 	}
 
@@ -2521,8 +2521,8 @@ int XsDevice::locationId() const
 
 /*! \brief Get the device given \a locId
 
-    \param locId the location ID of the device we're looking for
-    \returns a pointer to the device if found, nullptr otherwise.
+	\param locId the location ID of the device we're looking for
+	\returns a pointer to the device if found, nullptr otherwise.
 */
 XsDevice* XsDevice::getDeviceFromLocationId(uint16_t locId)
 {
@@ -3637,18 +3637,18 @@ void XsDevice::setPacketErrorRate(int per)
 /*! \endcond */
 
 /*!
-    \brief Returns the packet error rate for the for the device.
+	\brief Returns the packet error rate for the for the device.
 
-    \details The packet error rate indicates the proportion of data packets from
-    the device that are lost or corrupted in some manner over some time window.
-    Depending on the device the packet error rate may be updated actively or
-    passively, and the time window may vary, so packet error rates cannot be
-    compared directly between different types of device.
+	\details The packet error rate indicates the proportion of data packets from
+	the device that are lost or corrupted in some manner over some time window.
+	Depending on the device the packet error rate may be updated actively or
+	passively, and the time window may vary, so packet error rates cannot be
+	compared directly between different types of device.
 
-    \note Not all devices support packet error rate estimation. Those that don't
-    will always report a 0% packet error rate.
+	\note Not all devices support packet error rate estimation. Those that don't
+	will always report a 0% packet error rate.
 
-    \returns The packet error rate as a percentage.
+	\returns The packet error rate as a percentage.
 */
 int XsDevice::packetErrorRate() const
 {
@@ -4471,28 +4471,65 @@ XsResultValue XsDevice::deviceParameter(XsDeviceParameter& parameter) const
 	return XRV_UNSUPPORTED;
 }
 
+/*! \cond XS_INTERNAL */
 /*! \brief Returns the device GNSS platform
 	\returns The current device GNSS platform
+	\deprecated GNSS platform is a u-blox specific feature, please use the u-blox specific functions
+	\sa XsDevice::ubloxGnssPlatform
 */
 XsGnssPlatform XsDevice::gnssPlatform() const
 {
-	return XGP_Portable;
+	return static_cast<XsGnssPlatform>(ubloxGnssPlatform());
 }
 
 /*! \brief Set the device GNSS platform
 	\param gnssPlatform The GNSS platform that must be set
 	\returns true if the device GNSS platform was successfully set
+	\deprecated GNSS platform is a u-blox specific feature, please use the u-blox specific functions
+	\sa XsDevice::setUbloxGnssPlatform
 */
 bool XsDevice::setGnssPlatform(XsGnssPlatform gnssPlatform)
 {
-	XsMessage snd(XMID_SetGnssPlatform, 1);
-	snd.setBusId(busId());
-	snd.setDataShort((uint16_t)gnssPlatform);
+	return setUbloxGnssPlatform(static_cast<XsUbloxGnssPlatform>(gnssPlatform));
+}
+/*! \endcond */
 
-	if (!doTransaction(snd))
-		return false;
+/*! \brief Returns the device GNSS platform for u-blox GNSS receivers.
+	\warning This function has an undefined meaning when used on non u-blox GNSS receivers.
+	\returns The current device GNSS platform
+*/
+XsUbloxGnssPlatform XsDevice::ubloxGnssPlatform() const
+{
+	return XGP_Portable;
+}
 
-	return true;
+/*! \brief Set the device GNSS platform for u-blox GNSS receivers.
+	\warning This function produces undefined behaviour when used on non u-blox GNSS receivers.
+	\param ubloxGnssPlatform The GNSS platform that must be set
+	\returns true if the device GNSS platform was successfully set
+*/
+bool XsDevice::setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform)
+{
+	(void) ubloxGnssPlatform;
+	return false;
+}
+
+/*! \brief Gets some GNSS receiver settings
+	\returns XsIntArray containing the receiver settings
+*/
+XsIntArray XsDevice::gnssReceiverSettings() const
+{
+	return XsIntArray();
+}
+
+/*! \brief Sets some GNSS receiver settings
+	\param gnssReceiverSettings XsIntArray containing the receiver settings, that are to be set
+	\returns true if the settings were successfully set; false otherwise
+*/
+bool XsDevice::setGnssReceiverSettings(const XsIntArray& gnssReceiverSettings)
+{
+	(void)gnssReceiverSettings;
+	return false;
 }
 
 /*! \cond XS_INTERNAL */

@@ -68,6 +68,7 @@
 #include "xsdevice_def.h"
 #include <xstypes/xsstringarray.h>
 #include <xstypes/xsfilterprofilearray.h>
+#include <xstypes/xsintarray.h>
 
 struct XsFilterProfile;
 
@@ -97,7 +98,11 @@ public:
 
 	XsDeviceOptionFlag deviceOptionFlags() const override;
 
-	XsGnssPlatform gnssPlatform() const override;
+	XsUbloxGnssPlatform ubloxGnssPlatform() const override;
+	bool setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform) override;
+
+	XsIntArray gnssReceiverSettings() const override;
+	bool setGnssReceiverSettings(const XsIntArray& gnssReceiverSettings) override;
 
 	XsOutputConfigurationArray outputConfiguration() const override;
 
@@ -151,7 +156,7 @@ public:
 
 	static int calcFrequency(int baseFrequency, uint16_t skipFactor);
 
-	bool messageLooksSane(const XsMessage& msg) const;
+	bool messageLooksSane(const XsMessage& msg) const override;
 	uint32_t supportedStatusFlags() const override;
 
 protected:

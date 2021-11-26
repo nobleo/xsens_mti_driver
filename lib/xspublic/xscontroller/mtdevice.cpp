@@ -220,14 +220,68 @@ XsDeviceOptionFlag MtDevice::deviceOptionFlags() const
 		return (XsDeviceOptionFlag)rcv.getDataLong();
 	return XDOF_None;
 }
-/*! \copybrief XsDevice::gnssPlatform
+
+/*! \copybrief XsDevice::ubloxGnssPlatform
 */
-XsGnssPlatform MtDevice::gnssPlatform() const
+XsUbloxGnssPlatform MtDevice::ubloxGnssPlatform() const
 {
 	XsMessage snd(XMID_ReqGnssPlatform), rcv;
 	if (doTransaction(snd, rcv))
-		return (XsGnssPlatform)rcv.getDataShort();
+		return static_cast<XsUbloxGnssPlatform>(rcv.getDataShort());
 	return XGP_Portable;
+}
+
+/*! \copybrief XsDevice::setUbloxGnssPlatform
+*/
+bool MtDevice::setUbloxGnssPlatform(XsUbloxGnssPlatform ubloxGnssPlatform)
+{
+	XsMessage snd(XMID_SetGnssPlatform, 1);
+	snd.setBusId(busId());
+	snd.setDataShort((uint16_t)ubloxGnssPlatform);
+	if (!doTransaction(snd))
+		return false;
+	return true;
+}
+
+/*! \copydoc XsDevice::gnssReceiverSettings
+*/
+XsIntArray MtDevice::gnssReceiverSettings() const
+{
+	XsMessage snd(XMID_ReqGnssReceiverSettings), rcv;
+	snd.setBusId(busId());
+	if (doTransaction(snd, rcv))
+	{
+		XsIntArray gnssReceiverSettings = XsIntArray(4);
+		gnssReceiverSettings[0] = (int)rcv.getDataShort(0);//receiver type
+		gnssReceiverSettings[1] = (int)rcv.getDataShort(2);//receiver baud rate
+		gnssReceiverSettings[2] = (int)rcv.getDataShort(4);//receiver input rate
+		gnssReceiverSettings[3] = (int)rcv.getDataLong(6);//receiver options
+		return gnssReceiverSettings;
+	}
+	return XsIntArray();
+}
+
+/*! \copydoc XsDevice::setGnssReceiverSettings
+*/
+bool MtDevice::setGnssReceiverSettings(const XsIntArray& gnssReceiverSettings)
+{
+	XsMessage snd(XMID_SetGnssReceiverSettings, 10);
+	snd.setBusId(busId());
+
+	if (gnssReceiverSettings.size() > 0)
+		snd.setDataShort((uint16_t)gnssReceiverSettings[0], 0);//receiver type
+	if (gnssReceiverSettings.size() > 1)
+		snd.setDataShort((uint16_t)gnssReceiverSettings[1], 2);//receiver baud rate
+	if (gnssReceiverSettings.size() > 2)
+		snd.setDataShort((uint16_t)gnssReceiverSettings[2], 4);//receiver input rate
+	if (gnssReceiverSettings.size() > 3)
+		snd.setDataLong((uint32_t)gnssReceiverSettings[3], 6);//receiver options
+
+	XsMessage ack;
+	if (!doTransaction(snd, ack))
+		return false;
+
+	return true;
 }
 
 /*! \copybrief XsDevice::outputConfiguration

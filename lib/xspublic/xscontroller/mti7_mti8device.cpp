@@ -62,22 +62,23 @@
 //  ARBITRATORS APPOINTED IN ACCORDANCE WITH SAID RULES.
 //  
 
-#include "mti7device.h"
+#include "mti7_mti8device.h"
 #include <xstypes/xsstatusflag.h>
+#include <xstypes/xsvector.h>
 
-Mti7Device::Mti7Device(Communicator* comm)
+MTi7_MTi8Device::MTi7_MTi8Device(Communicator* comm)
 	: MtiBaseDeviceEx(comm)
 {
 	if (comm)
 		comm->setDefaultTimeout(2000); //Increase the default timeout for MTi-1 devices because a settings write can occasionally take ~900ms
 }
 
-Mti7Device::Mti7Device(XsDevice* masterdevice)
+MTi7_MTi8Device::MTi7_MTi8Device(XsDevice* masterdevice)
 	: MtiBaseDeviceEx(masterdevice)
 {
 }
 
-Mti7Device::~Mti7Device()
+MTi7_MTi8Device::~MTi7_MTi8Device()
 {
 }
 
@@ -112,7 +113,8 @@ int baseFreq(XsDataIdentifier dataType)
 			return 50;
 		case XDI_GnssGroup:
 		{
-			if ((dataType & XDI_FullTypeMask) == XDI_GnssPvtData)
+			XsDataIdentifier fullType = (dataType & XDI_FullTypeMask);
+			if (fullType == XDI_GnssGroup || fullType == XDI_GnssPvtData)
 				return 4;
 			return 0;
 		}
@@ -124,7 +126,7 @@ int baseFreq(XsDataIdentifier dataType)
 
 /*! \brief Returns the base update rate (hz) corresponding to the dataType
 */
-MtiBaseDevice::BaseFrequencyResult Mti7Device::getBaseFrequencyInternal(XsDataIdentifier dataType) const
+MtiBaseDevice::BaseFrequencyResult MTi7_MTi8Device::getBaseFrequencyInternal(XsDataIdentifier dataType) const
 {
 	BaseFrequencyResult result;
 	result.m_frequency = 0;
@@ -151,12 +153,12 @@ MtiBaseDevice::BaseFrequencyResult Mti7Device::getBaseFrequencyInternal(XsDataId
 	return result;
 }
 
-bool Mti7Device::hasIccSupport() const
+bool MTi7_MTi8Device::hasIccSupport() const
 {
 	return true;
 }
 
-uint32_t Mti7Device::supportedStatusFlags() const
+uint32_t MTi7_MTi8Device::supportedStatusFlags() const
 {
 	return (uint32_t)(
 			//|XSF_SelfTestOk
@@ -181,17 +183,18 @@ uint32_t Mti7Device::supportedStatusFlags() const
 			//|XSF_SyncOut
 			| XSF_FilterMode
 			| XSF_HaveGnssTimePulse
+			| (deviceId().isRtk() ? XSF_RtkStatus : 0)
 		);
 }
 
-bool Mti7Device::setStringOutputMode(uint16_t /*type*/, uint16_t /*period*/, uint16_t /*skipFactor*/)
+bool MTi7_MTi8Device::setStringOutputMode(uint16_t /*type*/, uint16_t /*period*/, uint16_t /*skipFactor*/)
 {
 	return true;
 }
 
 /*! \copybrief XsDevice::shortProductCode
 */
-XsString Mti7Device::shortProductCode() const
+XsString MTi7_MTi8Device::shortProductCode() const
 {
 	XsString code = productCode();
 
@@ -199,4 +202,42 @@ XsString Mti7Device::shortProductCode() const
 		code = stripProductCode(code);
 
 	return code;
+}
+
+/*! \copydoc XsDevice::setGnssLeverArm
+*/
+bool MTi7_MTi8Device::setGnssLeverArm(const XsVector& arm)
+{
+	if (!deviceId().isRtk())
+		return false;
+
+	XsMessage snd(XMID_SetGnssLeverArm, 3 * sizeof(float));
+	snd.setBusId(busId());
+	snd.setDataFloat((float)arm[0], 0/* sizeof(float)*/);
+	snd.setDataFloat((float)arm[1], 1 * sizeof(float));
+	snd.setDataFloat((float)arm[2], 2 * sizeof(float));
+
+	XsMessage rcv;
+	if (!doTransaction(snd, rcv))
+		return false;
+
+	return true;
+}
+
+/*! \copydoc XsDevice::gnssLeverArm
+*/
+XsVector MTi7_MTi8Device::gnssLeverArm() const
+{
+	if (!deviceId().isRtk())
+		return XsVector();
+
+	XsMessage snd(XMID_ReqGnssLeverArm), rcv;
+	if (!doTransaction(snd, rcv))
+		return XsVector();
+
+	XsVector arm(3);
+	arm[0] = rcv.getDataFloat(0/* sizeof(float)*/);
+	arm[1] = rcv.getDataFloat(1 * sizeof(float));
+	arm[2] = rcv.getDataFloat(2 * sizeof(float));
+	return arm;
 }

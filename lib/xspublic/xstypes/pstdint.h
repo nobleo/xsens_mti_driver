@@ -244,8 +244,9 @@
 	Dave Thorup
 
 */
-
-#ifndef _PSTDINT_H_INCLUDED
+#ifdef SWIG
+#include <stdint.h>
+#elif !defined(_PSTDINT_H_INCLUDED)
 #include <stddef.h>
 #include <limits.h>
 

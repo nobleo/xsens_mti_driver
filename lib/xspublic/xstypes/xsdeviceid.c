@@ -325,6 +325,8 @@ int XsDeviceId_hasInternalGnss(struct XsDeviceId const* thisPtr)
 		if (thisPtr->m_productCode[7] == 'G')
 			return 1;
 	}
+	if (XsDeviceId_isMtigX10(thisPtr))
+		return 1;
 	return 0;
 
 }
@@ -607,7 +609,8 @@ int XsDeviceId_isGnss(const struct XsDeviceId* thisPtr)
 	if (XsDeviceId_isLegacyDeviceId(thisPtr))
 	{
 		return (((thisPtr->m_deviceId & XS_DID_MK4TYPE_MASK) == XS_DID_MK4TYPE_MT_700) ||
-				((thisPtr->m_deviceId & XS_DID_MK4TYPE_MASK) == XS_DID_MK4TYPE_MT_7_MPU));
+				((thisPtr->m_deviceId & XS_DID_MK4TYPE_MASK) == XS_DID_MK4TYPE_MT_7_MPU)
+				||(thisPtr->m_deviceId & XS_DID_MK4TYPE_MASK) == XS_DID_MK4TYPE_MT_8_MPU);
 	}
 	else
 	{
@@ -636,7 +639,7 @@ int XsDeviceId_isGnss(const struct XsDeviceId* thisPtr)
 int XsDeviceId_isRtk(const struct XsDeviceId* thisPtr)
 {
 	if (XsDeviceId_isLegacyDeviceId(thisPtr))
-		return 0;
+		return ((thisPtr->m_deviceId & XS_DID_MK4TYPE_MASK) == XS_DID_MK4TYPE_MT_8_MPU);
 	else
 	{
 		if (memcmp(thisPtr->m_productCode, "MTi-", 4) != 0)
@@ -905,6 +908,8 @@ void XsDeviceId_typeName(XsDeviceId const* thisPtr, XsString* str)
 		else if (XsDeviceId_isAhrs(thisPtr))
 			XsString_assignCharArray(str, "MTi-330");
 	}
+	else if (XsDeviceId_isMtiX(thisPtr) && XsDeviceId_isRtk(thisPtr))
+		XsString_assignCharArray(str, "MTi-8");
 	else if (XsDeviceId_isMtMk4_1(thisPtr))
 		XsString_assignCharArray(str, "MTi-1");
 	else if (XsDeviceId_isMtMk4_2(thisPtr))
@@ -1096,11 +1101,11 @@ int XsDeviceId_isMtMk4_3(const struct XsDeviceId* thisPtr)
 
 /*! \brief Test if this device ID represents an MTMk4 7.
 	\returns True if it is an MTMk4 7.
-	\deprecated Use isMtiX() and isGnss()
+	\deprecated Use isMtiX(), isGnss(), and !isRtk() together
 */
 int XsDeviceId_isMtMk4_7(const struct XsDeviceId* thisPtr)
 {
-	return XsDeviceId_isMtiX(thisPtr) && XsDeviceId_isGnss(thisPtr);
+	return XsDeviceId_isMtiX(thisPtr) && XsDeviceId_isGnss(thisPtr) && !XsDeviceId_isRtk(thisPtr);
 }
 
 /*! \brief Test if this device ID represents an MTMk4 10 series.

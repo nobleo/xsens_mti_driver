@@ -72,6 +72,7 @@
 	#include <stddef.h>
 	typedef double XsReal;	//!< Defines the floating point type used by the Xsens libraries
 	typedef size_t XsSize;	//!< XsSize must be unsigned number!
+	typedef ptrdiff_t XsSizeSigned;	//!< signed variant of XsSize
 	#define XSREAL_ALLOWS_MEMCPY	1
 	#ifndef PRINTF_SIZET_MODIFIER
 		#if defined(XSENS_64BIT)
@@ -91,6 +92,7 @@
 #else
 	typedef float XsReal;			//!< Defines the floating point type used by the Xsens libraries
 	typedef unsigned int XsSize;	//!< XsSize must be unsigned number!
+	typedef int XsSizeSigned;		//!< signed variant of XsSize
 	#define XSREAL_ALLOWS_MEMCPY	1
 	#define PRINTF_SIZET_MODIFIER ""
 #endif // XSENS_SINGLE_PRECISION

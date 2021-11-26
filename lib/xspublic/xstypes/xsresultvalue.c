@@ -307,7 +307,12 @@ const char* XsResultValue_toString(XsResultValue result)
 			return "Communication between the device and the GNSS module failed";
 		case XRV_DEVICE_NOT_CALIBRATED:
 			return "The EMTS of the device does not contain calibration data";
-
+		case XRV_GNSSCONNECTIONLOST:
+			return "Connection lost with the GNSS module";
+		case XRV_GNSSLOWINPUTRATE:
+			return "GNSS input rate is too low";
+		case XRV_GNSSINCOMPLETEDATASET:
+			return "Incomplete dataset for the GNSS module";
 		default:
 			return "!!Undefined Result Value!!";
 	}

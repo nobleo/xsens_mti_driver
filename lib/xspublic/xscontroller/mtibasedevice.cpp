@@ -531,12 +531,6 @@ uint8_t MtiBaseDevice::syncLine(const XsSyncSetting& setting) const
 	}
 }
 
-bool MtiBaseDevice::messageLooksSane(const XsMessage& msg) const
-{
-	(void)msg;
-	return true;
-}
-
 /*! \returns True if device uses on board filtering */
 bool MtiBaseDevice::deviceUsesOnBoardFiltering()
 {

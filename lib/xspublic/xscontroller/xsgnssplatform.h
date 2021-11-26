@@ -65,23 +65,9 @@
 #ifndef XSGNSSPLATFORM_H
 #define XSGNSSPLATFORM_H
 
-/*! \brief Used to select GNSS chip platform
-	\sa XsDevice::setGnssPlatform
-	\details These enum values represent different platform setting for the GNSS chip
-*/
-enum XsGnssPlatform
-{
-	XGP_Portable				= 0,
-	XGP_Stationary				= 2,
-	XGP_Pedestrian				= 3,
-	XGP_Automotive				= 4,
-	XGP_AtSea					= 5,
-	XGP_Airborne1g				= 6,
-	XGP_Airborne2g				= 7,
-	XGP_Airborne4g				= 8,	//!< Airborne with <4g Acceleration
-	XGP_Wrist					= 9
-};
+#include "xsubloxgnssplatform.h"
 
-typedef enum XsGnssPlatform XsGnssPlatform;
+//!	\deprecated GNSS platform is a u-blox specific feature, please use the u-blox specific functions
+typedef enum XsUbloxGnssPlatform XsGnssPlatform;
 
 #endif
