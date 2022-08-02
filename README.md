@@ -6,6 +6,7 @@ Changes done with respect to the orginal source:
  - Adapted CMakelists.txt to also install TARGETS
  - Adapted CMakelists.txt to run a PRE-BUILD command that builds libraries needed for the executable
  - Removed all trailing whitespaces
+ - Added DiagnosedPublisher to the ImuPublisher
 
 # Documentation:
   For this you need the full MT SDK which can be downloaded from: https://www.xsens.com/software-downloads
