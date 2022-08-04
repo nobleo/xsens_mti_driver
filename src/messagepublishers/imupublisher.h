@@ -35,6 +35,7 @@
 
 #include "packetcallback.h"
 #include <sensor_msgs/Imu.h>
+#include <diagnostic_updater/publisher.h>
 
 static void variance_from_stddev_param(std::string param, double *variance_out)
 {
@@ -59,7 +60,11 @@ static void variance_from_stddev_param(std::string param, double *variance_out)
 
 struct ImuPublisher : public PacketCallback
 {
-    ros::Publisher pub;
+    ros::Publisher inner_pub;
+    diagnostic_updater::Updater updater;
+    double expected_frequency;
+    double frequency_tolerance = 0.1;
+    diagnostic_updater::DiagnosedPublisher<sensor_msgs::Imu> pub;
     std::string frame_id = DEFAULT_FRAME_ID;
 
 
@@ -67,11 +72,13 @@ struct ImuPublisher : public PacketCallback
     double linear_acceleration_variance[3];
     double angular_velocity_variance[3];
 
-    ImuPublisher(ros::NodeHandle &node)
+    ImuPublisher(ros::NodeHandle &node) :
+        expected_frequency(ros::param::param("~expected_frequency", 100)),
+        inner_pub(node.advertise<sensor_msgs::Imu>("imu/data", ros::param::param("~publisher_queue_size", 5))),
+        updater(node),
+        pub(inner_pub, updater, {&expected_frequency, &expected_frequency, frequency_tolerance}, {})
     {
-        int pub_queue_size = 5;
-        ros::param::get("~publisher_queue_size", pub_queue_size);
-        pub = node.advertise<sensor_msgs::Imu>("imu/data", pub_queue_size);
+        updater.setHardwareID("none");
         ros::param::get("~frame_id", frame_id);
 
         // REP 145: Conventions for IMU Sensor Drivers (http://www.ros.org/reps/rep-0145.html)
@@ -160,6 +167,7 @@ struct ImuPublisher : public PacketCallback
             }
 
             pub.publish(msg);
+            updater.update();
         }
     }
 };
