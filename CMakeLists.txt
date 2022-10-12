@@ -68,6 +68,20 @@ target_link_libraries(
 	dl
 	${catkin_LIBRARIES}
 )
+add_dependencies(xsens_mti_node xspublic)
+
+add_executable(
+  list_filter_profiles
+  src/list_filter_profiles.cpp
+)
+target_link_libraries(list_filter_profiles
+  xscontroller
+  xscommon
+  xstypes
+  dl
+  ${catkin_LIBRARIES}
+)
+add_dependencies(list_filter_profiles xspublic)
 
 # Install targets
 install(
@@ -84,6 +98,6 @@ install(
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
-add_custom_command(TARGET xsens_mti_node
-    PRE_BUILD COMMAND +make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/xspublic
+add_custom_target(xspublic
+  COMMAND +make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/xspublic
 )
