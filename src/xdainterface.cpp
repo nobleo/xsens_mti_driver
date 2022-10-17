@@ -242,6 +242,14 @@ bool XdaInterface::prepare()
 	if (!m_device->gotoConfig())
 		return handleError("Could not go to config");
 
+	std::string filter_profile;
+	if (ros::param::param("~filter_profile", filter_profile, filter_profile))
+	{
+		ROS_INFO("Setting filter profile to '%s'", filter_profile.c_str());
+		if (!m_device->setOnboardFilterProfile(filter_profile))
+			return handleError("Could not configure filter profile");
+	}
+
 	// read EMTS and device config stored in .mtb file header.
 	if (!m_device->readEmtsAndDeviceConfiguration())
 		return handleError("Could not read device configuration");
