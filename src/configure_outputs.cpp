@@ -2,7 +2,6 @@
 #include <xscontroller/xscontrol_def.h>
 #include <xscontroller/xsdevice_def.h>
 #include <xscontroller/xsscanner.h>
-#include <xstypes/xsfilterprofilearray.h>
 
 Journaller * gJournal = 0;
 
