@@ -83,6 +83,19 @@ target_link_libraries(list_filter_profiles
 )
 add_dependencies(list_filter_profiles xspublic)
 
+add_executable(
+  configure_outputs
+  src/configure_outputs.cpp
+)
+target_link_libraries(configure_outputs
+  xscontroller
+  xscommon
+  xstypes
+  dl
+  ${catkin_LIBRARIES}
+)
+add_dependencies(configure_outputs xspublic)
+
 # Install targets
 install(
   TARGETS
