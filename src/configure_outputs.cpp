@@ -101,11 +101,11 @@ public:
 
     ROS_INFO("Configuring the device...");
     XsOutputConfigurationArray configArray;
-    configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
-    configArray.push_back(XsOutputConfiguration(XDI_SampleTimeFine, 0));
 
     if (m_device->deviceId().isImu())
     {
+      configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
+      configArray.push_back(XsOutputConfiguration(XDI_SampleTimeFine, 0));
       configArray.push_back(XsOutputConfiguration(XDI_Acceleration, acceleration_hz));
       configArray.push_back(XsOutputConfiguration(XDI_RateOfTurn, angular_velocity_hz));
       configArray.push_back(XsOutputConfiguration(XDI_MagneticField, magnetic_field_hz));
