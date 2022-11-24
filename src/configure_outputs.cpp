@@ -129,7 +129,7 @@ int main(int argc, char * argv[])
   if (argc != 3)
     std::runtime_error("Three integers are needed");
 
-  ros::init(argc, argv, "xsens_driver_configuration");
+  ros::init(argc, argv, "xsens_driver");
   XdaInterface interface;
   interface.connectDevice();
   interface.configureOutput(std::atoi(argv[0]), std::atoi(argv[1]), std::atoi(argv[2]));
