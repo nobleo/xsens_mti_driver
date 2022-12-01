@@ -91,7 +91,8 @@ public:
     return true;
   }
 
-  void configureOutput(int acceleration_hz, int angular_velocity_hz, int magnetic_field_hz)
+  void configureOutput(unsigned int sampling_frequency, unsigned int enable_acceleration,
+                       unsigned int enable_angular_velocity, unsigned int enable_orientation)
   {
     assert(m_device != 0);
 
@@ -102,13 +103,16 @@ public:
     ROS_INFO("Configuring the device...");
     XsOutputConfigurationArray configArray;
 
-    if (m_device->deviceId().isImu())
+    if (m_device->deviceId().isMti())
     {
       configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
       configArray.push_back(XsOutputConfiguration(XDI_SampleTimeFine, 0));
-      configArray.push_back(XsOutputConfiguration(XDI_Acceleration, acceleration_hz));
-      configArray.push_back(XsOutputConfiguration(XDI_RateOfTurn, angular_velocity_hz));
-      configArray.push_back(XsOutputConfiguration(XDI_MagneticField, magnetic_field_hz));
+      if (enable_acceleration)
+        configArray.push_back(XsOutputConfiguration(XDI_Acceleration, sampling_frequency));
+      if (enable_angular_velocity)
+        configArray.push_back(XsOutputConfiguration(XDI_RateOfTurn, sampling_frequency));
+      if (enable_orientation)
+        configArray.push_back(XsOutputConfiguration(XDI_Quaternion, sampling_frequency));
     }
     else
     {
@@ -117,6 +121,7 @@ public:
 
     if (!m_device->setOutputConfiguration(configArray))
       throw std::runtime_error("Could not configure MTi device. Aborting.");
+
   }
 
 private:
@@ -126,13 +131,16 @@ private:
 
 int main(int argc, char * argv[])
 {
-  if (argc != 3)
-    std::runtime_error("Three integers are needed");
+  if (argc != 5){
+    printf("Usage: rosrun xsens_mti_driver sampling_frequency enable_acceleration(0-1) "
+           "enable_angular_velocity(0-1) enable_orientation(0-1)\n\n");
+    throw std::runtime_error("Four integers are needed");
+  }
 
   ros::init(argc, argv, "xsens_driver");
   XdaInterface interface;
   interface.connectDevice();
-  interface.configureOutput(std::atoi(argv[0]), std::atoi(argv[1]), std::atoi(argv[2]));
+  interface.configureOutput(std::atoi(argv[1]), std::atoi(argv[2]), std::atoi(argv[3]), std::atoi(argv[4]));
 
   return EXIT_SUCCESS;
 }
