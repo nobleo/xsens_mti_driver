@@ -235,36 +235,40 @@ bool XdaInterface::connectDevice()
 	return true;
 }
 
-bool XdaInterface::configureOutput(unsigned int sampling_frequency, unsigned int enable_acceleration,
-								   unsigned int enable_angular_velocity, unsigned int enable_orientation)
-  {
-    assert(m_device != 0);
+bool XdaInterface::configureOutput(unsigned int sampling_frequency,
+								   unsigned int enable_acceleration,
+								   unsigned int enable_angular_velocity,
+								   unsigned int enable_orientation)
+{
+	assert(m_device != 0);
 
-    ROS_INFO("Putting device into configuration mode...");
-    if (!m_device->gotoConfig())
-      return handleError("Could not put device into configuration mode");
+	ROS_INFO("Putting device into configuration mode...");
+	if (!m_device->gotoConfig())
+		return handleError("Could not put device into configuration mode");
 
-    ROS_INFO("Configuring the device...");
-    XsOutputConfigurationArray configArray;
+	ROS_INFO("Configuring the device...");
+	XsOutputConfigurationArray configArray;
 
-    if (m_device->deviceId().isMti())
-    {
-      configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
-      configArray.push_back(XsOutputConfiguration(XDI_SampleTimeFine, 0));
-      if (enable_acceleration)
-        configArray.push_back(XsOutputConfiguration(XDI_Acceleration, sampling_frequency));
-      if (enable_angular_velocity)
-        configArray.push_back(XsOutputConfiguration(XDI_RateOfTurn, sampling_frequency));
-      if (enable_orientation)
-        configArray.push_back(XsOutputConfiguration(XDI_Quaternion, sampling_frequency));
-    }
-    else
-    {
-      throw std::runtime_error("No IMU device while configuring. Aborting.");
-    }
+	if (m_device->deviceId().isMti())
+	{
+		configArray.push_back(XsOutputConfiguration(XDI_PacketCounter, 0));
+		configArray.push_back(XsOutputConfiguration(XDI_SampleTimeFine, 0));
+		if (enable_acceleration)
+			configArray.push_back(XsOutputConfiguration(XDI_Acceleration, sampling_frequency));
+		if (enable_angular_velocity)
+			configArray.push_back(XsOutputConfiguration(XDI_RateOfTurn, sampling_frequency));
+		if (enable_orientation)
+			configArray.push_back(XsOutputConfiguration(XDI_Quaternion, sampling_frequency));
+	}
+	else
+	{
+		throw std::runtime_error("No IMU device while configuring. Aborting.");
+	}
 
-    if (!m_device->setOutputConfiguration(configArray))
-      return handleError("Could not configure MTi device. Aborting.");
+	if (!m_device->setOutputConfiguration(configArray))
+	{
+		return handleError("Could not configure MTi device. Aborting.");
+	}
 
 	return true;
 }
