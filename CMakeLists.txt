@@ -83,10 +83,26 @@ target_link_libraries(list_filter_profiles
 )
 add_dependencies(list_filter_profiles xspublic)
 
+add_executable(
+  configure_outputs
+  src/configure_outputs.cpp
+  src/xdainterface.cpp
+  src/xdacallback.cpp
+)
+target_link_libraries(configure_outputs
+  xscontroller
+  xscommon
+  xstypes
+  dl
+  ${catkin_LIBRARIES}
+)
+add_dependencies(configure_outputs xspublic)
+
 # Install targets
 install(
   TARGETS
     xsens_mti_node
+    configure_outputs
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
