@@ -285,7 +285,7 @@ bool XdaInterface::prepare()
 	{
 		ROS_INFO("Setting filter profile to '%s'", filter_profile.c_str());
 		if (!m_device->setOnboardFilterProfile(filter_profile))
-			return handleError("Could not configure filter profile");
+			ROS_ERROR("Could not configure filter profile");
 	}
 
 	// read EMTS and device config stored in .mtb file header.
